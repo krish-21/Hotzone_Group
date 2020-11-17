@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
 
 import requests
 
@@ -85,3 +86,24 @@ def list_locations(request):
         'data': data,
     }
     return HttpResponse(template.render(context, request))
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        print("username="+username+" password="+password)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            message = "credentials unauthenticated!"
+            return render(request, 'error.html', {'message': message})
+    else:
+        return render(request, 'login.html')
+
+
+def logOut_view(request):
+    logout(request)
+    return render(request, 'logout.html')

@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+    {% if user.is_authenticated %}
     <h2>LOCATIONS</h2>
     
     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
@@ -55,4 +56,5 @@
             }
         }
     </script>
+    {% endif %}
 {% endblock %}
