@@ -13,7 +13,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'userName'
     #REQUIRED_FIEDS = ['email', 'firstName', 'lastName', 'chpStaffNumber']
 
-    def __str__():
+    def __str__(self):
         return self.userName
 
 class Patient(models.Model):
