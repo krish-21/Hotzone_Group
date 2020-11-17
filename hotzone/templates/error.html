@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block main %}
+    <div class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+    <button class="btn search"><a href="{% url 'search' %}">Go Back</a></button>
+{% endblock %}

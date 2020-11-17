@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Success
+{% endblock %}
+
+{% block main %}
+    <div class="form-group">
+        <span style="color: green;">Succesfuly stored location data</span>
+    </div>
+    <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+{% endblock %}

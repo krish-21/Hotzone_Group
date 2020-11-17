@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+    <h2>LOCATIONS</h2>
+    
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+    
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">X-Coordinate</th>
+                <th scope="col">Y-Coordinate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{row.name}}</td>
+                <td>{{row.address}}</td>
+                <td>{{row.x}}</td>
+                <td>{{row.y}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+
+    <script>
+        function myFunction() {
+            console.log('hi')
+            // Declare variables 
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+        
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                } 
+            }
+        }
+    </script>
+{% endblock %}

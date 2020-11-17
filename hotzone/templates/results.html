@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+    <h2>RESULTS</h2>
+
+    <p>Please choose one of the following</p>
+
+    <form action="{% url 'save' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">X-Coordinate</th>
+                <th scope="col">Y-Coordinate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td>
+                <td>{{row.nameEN}}</td>
+                <td>{{row.addressEN}}</td>
+                <td>{{row.x}}</td>
+                <td>{{row.y}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Submit">
+    </form>
+{% endblock %}

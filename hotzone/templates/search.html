@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search Locations
+{% endblock %}
+
+{% block main %}
+    <form action="{% url 'search' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
