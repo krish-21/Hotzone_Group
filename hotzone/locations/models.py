@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class StaffUser(AbstractUser):
-    chpStaffNumber = models.CharField(max_length=7, unique=True)
+    chpStaffNumber = models.CharField("CHP Stuff Number", max_length=7, unique=True)
     '''
     userName = models.CharField(unique=True)
     email = models.EmailField(max_length=255, unique=True)
@@ -17,6 +17,7 @@ class StaffUser(AbstractUser):
     def __str__(self):
         return self.userName
     '''
+
 
 class Patient(models.Model):
     name = models.CharField(max_length=80, default="")
