@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Logout
+{% endblock %}
+
+{% block main %}
+    <div class="alert alert-primary" role="alert">
+        You have logged out! Thank you for using HotZone.
+    </div>
+    <button type="submit" class="btn btn-link">
+        <a href ="{% url 'login'%}">return to Login page</a>
+    </button>
+{% endblock %}

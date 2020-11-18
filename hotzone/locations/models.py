@@ -3,9 +3,10 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class User(AbstractUser):
+class StaffUser(AbstractUser):
+    chpStaffNumber = models.CharField("CHP Stuff Number", max_length=7, unique=True)
+    '''
     userName = models.CharField(unique=True)
-    chpStaffNumber = models.CharField(max_length=7, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     firstName = models.CharField()
     lastName = models.CharField()
@@ -15,6 +16,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.userName
+    '''
+
 
 class Patient(models.Model):
     name = models.CharField(max_length=80, default="")
@@ -49,8 +52,8 @@ class Case(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=300)
-    xCoord = models.FloatField()
-    yCoord = models.FloatField()
+    xCoord = models.FloatField(default=0.0)
+    yCoord = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.name

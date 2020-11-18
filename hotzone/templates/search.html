@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block main %}
-    <form action="{% url 'search' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit">
-    </form>
+    {% if user.is_authenticated %}
+        <form action="{% url 'search' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
 {% endblock %}

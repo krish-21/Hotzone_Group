@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    <button class="btn search"><a href="{% url 'search' %}">Search Location</a></button>
-    <button class="btn view"><a href="{% url 'list' %}">List locations</a></button>
+    {% if user.is_authenticated %}
+        <button class="btn search"><a href="{% url 'search' %}">Search Location</a></button>
+        <button class="btn view"><a href="{% url 'list' %}">List locations</a></button>
+    {% endif %}
 {% endblock %}

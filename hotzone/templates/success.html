@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block main %}
-    <div class="form-group">
-        <span style="color: green;">Succesfuly stored location data</span>
-    </div>
-    <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+    {% if user.is_authenticated %}
+        <div class="form-group">
+            <span style="color: green;">Succesfuly stored location data</span>
+        </div>
+        <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+    {% endif %}
 {% endblock %}

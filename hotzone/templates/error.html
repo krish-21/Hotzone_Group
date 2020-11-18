@@ -8,5 +8,9 @@
     <div class="alert alert-danger" role="alert">
         {{message}}
     </div>
-    <button class="btn search"><a href="{% url 'search' %}">Go Back</a></button>
+    {% if user.is_authenticated %}
+        <button class="btn search"><a href="{% url 'search' %}">Go Back</a></button>
+    {% else %}
+        <button class="btn search"><a href="{% url 'login' %}">Return to Login page</a></button>
+    {% endif %}
 {% endblock %}

@@ -72,12 +72,15 @@
     <body>
 
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="/"><span class="red">Hot</span><span class="green">Zone</span></a>
-            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbar">
-            </div>
+            <a class="navbar-brand" href="/"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></a>
+            {% if user.is_authenticated %}
+                <h2>Hello, {{user.username}}<h2>
+                <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout'%}">LogOut</a>
+                        </li>
+                </ul>
+            {% endif %}
         </nav>
 
         <main class="container p-5">
