@@ -52,8 +52,8 @@ class Case(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=300)
-    xCoord = models.FloatField(default=0.0)
-    yCoord = models.FloatField(default=0.0)
+    x = models.FloatField(default=0.0)
+    y = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.name
