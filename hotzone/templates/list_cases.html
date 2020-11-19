@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+    <h2>Case Results</h2>
+
+    <p>Please choose one of the following</p>
+
+    <input type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Search by Case Number..">
+    <input type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Search by Patient Number..">
+
+    <form action="{% url 'view_case' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th scope="col">Case Number</th>
+                <th scope="col">Patient Number</th>
+                <th scope="col">Virus</th>
+                <th scope="col">Date Confirmed</th>
+                <th scope="col">Case Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td>
+                <td>{{row.pk}}</td>
+                <td>{{row.patient}}</td>
+                <td>{{row.virus}}</td>
+                <td>{{row.dateConfirmed}}</td>
+                <td>{{row.caseType}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="View Case">
+    </form>
+
+    <script>
+        function myFunction1() {
+            console.log('hi')
+            // Declare variables 
+            var input, filter, table, tr, td, i, txtValue;
+            input1 = document.getElementById("myInput1");
+            input2 = document.getElementById("myInput2");
+            input2.value = ""
+            filter = input1.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            console.log(filter)
+        
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                } 
+            }
+        }
+
+        function myFunction2() {
+            console.log('hi')
+            // Declare variables 
+            var input, filter, table, tr, td, i, txtValue;
+            input1 = document.getElementById("myInput1");
+            input1.value = ""
+            input2 = document.getElementById("myInput2");
+            filter = input2.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            console.log(filter)
+        
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                } 
+            }
+        }
+    </script>
+{% endblock %}

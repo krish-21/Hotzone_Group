@@ -7,7 +7,8 @@
 {% block main %}
     {% if user.is_authenticated %}
         <button class="btn search"><a href="{% url 'search_location' %}">Search Location</a></button>
-        <button class="btn view"><a href="{% url 'list_location' %}">List locations</a></button>
+        <button class="btn view"><a href="{% url 'list_location' %}">List Locations</a></button>
+        <button class="btn view"><a href="{% url 'list_cases' %}">List Cases</a></button>
     {% else %}
     <div class="alert alert-danger" role="alert">
         Please login to access this page!

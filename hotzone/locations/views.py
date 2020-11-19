@@ -3,15 +3,36 @@ from django.template import loader
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
+from django.core import serializers
 
 import requests
 
 from django.views.generic import TemplateView
 
-from .forms import LocationForm, SelectionForm
-from .models import Location
+from .forms import LocationForm
+from .models import Location, Case, Patient
 
 # Create your views here.
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            message = "Invalid Credentials!"
+            return render(request, 'error.html', {'message': message})
+    else:
+        return render(request, 'login.html')
+
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'logout.html')
+
 
 class HomePage(TemplateView):
     template_name = "index.html"
@@ -28,6 +49,15 @@ def get_location_api(name):
         return 200, filtered
     else:
         return r.status_code, None
+
+def query_location(name):
+    data = None
+    #
+    #
+    #   Add code here
+    #
+    #
+    return data
    
 
 def search_location(request):
@@ -39,16 +69,33 @@ def search_location(request):
         if form.is_valid():
             # process the data in form.cleaned_data as required
             name = form.cleaned_data['name']
-            code, data = get_location_api(name)
-            
-            # redirect to a new URL:
+
+            # Query the existing database for location
+            data = query_location(name)
+
+            # If no data returned, make the API call
             if data == None:
-                message = "Error 400: Bad Request" if code == 400 else "Error 500: Internal Server Error"
-                return render(request, 'error.html', {'message': message})
+                code, data = get_location_api(name)
+                            
+                # redirect to a new URL:
+                if data == None:
+                    # if no data returned, return GeoLocation Error
+                    message = "Error 400: Bad Request" if code == 400 else "Error 500: Internal Server Error"
+                    return render(request, 'error.html', {'message': message})
+                else:
+                    # if location call successful, return results
+                    request.session['data'] = data
+                    return render(request, 'location_results.html', {'data': data})
+            
+            # location exists in the databse
             else:
-                # return HttpResponseRedirect(reverse('index'))
-                request.session['data'] = data
-                return render(request, 'results.html', {'data': data})
+                pass
+                #
+                #
+                #   Add code here
+                #
+                #
+
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -57,7 +104,11 @@ def search_location(request):
     return render(request, 'search.html', {'form': form})
 
 def save_location(request):
-    choice = request.POST.__getitem__('choice')
+    try:
+        choice = request.POST.__getitem__('choice')
+    except Exception as e:
+        return render(request, 'error.html', {'message': 'No location selected'})
+
     data = request.session['data'][int(choice)]
 
     l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
@@ -73,29 +124,39 @@ def save_location(request):
 def list_locations(request):
     data = Location.objects.order_by('name')
 
-    template = loader.get_template('list.html')
+    template = loader.get_template('list_locations.html')
     context = {
         'data': data,
     }
     return HttpResponse(template.render(context, request))
 
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        print("username="+username+" password="+password)
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse('index'))
+def list_cases(request):
+    data = Case.objects.all()
+    
+    data_json = serializers.serialize('json', data)
+
+    request.session['data'] = data_json
+    
+    return render(request, 'list_cases.html', {'data': data})
+
+def view_case(request):
+    try:
+        choice = int(request.POST.__getitem__('choice'))
+    except Exception as e:
+        return render(request, 'error.html', {'message': 'No case selected'})
+    
+    data_json = request.session['data']
+
+    i = 0
+    for obj in serializers.deserialize("json", data_json):
+        if i == choice:
+            pk = obj.object.pk
         else:
-            message = "Invalid Credentials!"
-            return render(request, 'error.html', {'message': message})
-    else:
-        return render(request, 'login.html')
+            i = i + 1
+    
 
+    data = Case.objects.filter(pk=pk)
+    
 
-def logout_view(request):
-    logout(request)
-    return render(request, 'logout.html')
+    return render(request, 'view_case.html', {'data': data})

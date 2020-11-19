@@ -72,24 +72,15 @@
     <body>
 
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="{% url 'index' %}"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></a>
             {% if user.is_authenticated %}
-                <!-- <h3>Hello, {{user.username}}<h3> -->
-                <!-- <ul class="nav justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout'%}">LogOut</a>
-                        </li>
-                </ul> -->
-                <!-- <ul class="navbar-nav ml-auto mt-2">
-                    <li class="nav-item">
-                        <h3>Welcome {{user.username}}</h3>
-                    </li>
-                </ul> -->
+                <a class="navbar-brand" href="{% url 'index' %}"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></a>
                 <ul class="navbar-nav ml-auto mt-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout'%}">LogOut</a>
+                        <a class="nav-link" href="{% url 'logout'%}">Log out</a>
                     </li>
                 </ul>
+            {% else %}
+            <span class="navbar-brand"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></span>
             {% endif %}
         </nav>
 
@@ -98,7 +89,7 @@
         </main>
         
         <footer class="small text-center text-muted">
-            This is Iteration 2 of Sprint 1 of <a href="https://www.cs.hku.hk/index.php/programmes/course-offered?infile=2019/comp3297.html" target="_blank">COMP3297</a>'s Course Project.
+            This is Sprint 2 of <a href="https://www.cs.hku.hk/index.php/programmes/course-offered?infile=2019/comp3297.html" target="_blank">COMP3297</a>'s Course Project.
         </footer>
 
     </body>
