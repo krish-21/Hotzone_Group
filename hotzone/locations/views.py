@@ -99,7 +99,10 @@ def search_location(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = LocationForm()
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        else:
+            form = LocationForm()
 
     return render(request, 'search.html', {'form': form})
 
@@ -107,7 +110,10 @@ def save_location(request):
     try:
         choice = request.POST.__getitem__('choice')
     except Exception as e:
-        return render(request, 'error.html', {'message': 'No location selected'})
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        else:
+            return render(request, 'error.html', {'message': 'No location selected'})
 
     data = request.session['data'][int(choice)]
 
@@ -144,7 +150,10 @@ def view_case(request):
     try:
         choice = int(request.POST.__getitem__('choice'))
     except Exception as e:
-        return render(request, 'error.html', {'message': 'No case selected'})
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        else:
+            return render(request, 'error.html', {'message': 'No case selected'})
     
     data_json = request.session['data']
 
