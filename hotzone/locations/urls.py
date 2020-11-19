@@ -1,7 +1,7 @@
 from django.urls import path
 
 from locations import views
-from .views import login_view, logout_view, HomePage, search_location, save_location, list_locations, list_cases, view_case, add_visit
+from .views import login_view, logout_view, HomePage, search_location, save_location, list_locations, list_cases, view_case
 
 urlpatterns = [
     path('', 
@@ -28,7 +28,4 @@ urlpatterns = [
     path('view_case',
         view_case,
         name='view_case'),
-    path('add_visit',
-        add_visit,
-        name='add_visit'),
 ]

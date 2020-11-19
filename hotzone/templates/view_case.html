@@ -25,11 +25,6 @@
                 <td>{{row.virus}}</td>
                 <td>{{row.dateConfirmed}}</td>
                 <td>{{row.caseType}}</td>
-                <td>
-                    <form action="{% url 'search_location' %}" method="GET">
-                        <input type="submit" value="Add Visit">
-                    </form>
-                </td>
             </tr>
             {% endfor %}
         </tbody>
