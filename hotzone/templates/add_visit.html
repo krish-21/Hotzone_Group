@@ -7,9 +7,8 @@
 {% block main %}
     {% if user.is_authenticated %}
         <div class="form-group">
-            <span style="color: green;">Succesfuly stored location data</span>
+            <span style="color: green;">Succesfuly add a visit record</span>
         </div>
         <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
-        <button class="btn search"><a href="{% url 'add_visit' %}">Continue to Add Visit</a></button>
     {% endif %}
 {% endblock %}

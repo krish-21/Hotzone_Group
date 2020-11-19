@@ -6,11 +6,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 
 import requests
+import json
 
 from django.views.generic import TemplateView
 
 from .forms import LocationForm
-from .models import Location, Case, Patient
+from .models import Location, Case, Patient, Visit
 
 # Create your views here.
 
@@ -58,7 +59,6 @@ def query_location(name):
     #
     #
     return data
-   
 
 def search_location(request):
     # if this is a POST request we need to process the form data
@@ -115,6 +115,7 @@ def save_location(request):
 
     try:
         l.save()
+        request.session['location_pk'] = l.pk
     except Exception as e:
         print(e)
 
@@ -154,9 +155,35 @@ def view_case(request):
             pk = obj.object.pk
         else:
             i = i + 1
-    
 
     data = Case.objects.filter(pk=pk)
-    
+
+    data_dict = json.loads(serializers.serialize("json", data))[0]
+    request.session['case_pk'] = data_dict.get("pk")
+    print(request.session['case_pk'])
 
     return render(request, 'view_case.html', {'data': data})
+
+def add_visit (request):
+    try:
+        case_pk = request.session['case_pk']    
+    except Exception as e:
+        return render(request, 'error.html', {'message': 'No case selected'})
+
+    try:
+        location_pk = request.session['location_pk']    
+    except Exception as e:
+        return render(request, 'error.html', {'message': 'No location selected'})
+    
+    print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
+
+
+    v = Visit(case=Case.objects.get(pk=case_pk), location=Location.objects.get(pk=location_pk))
+    # here saving must be fail as detail 
+    try:
+        v.save()
+    except Exception as e:
+        print(e)
+    
+    return render(request, 'add_visit.html')
+
