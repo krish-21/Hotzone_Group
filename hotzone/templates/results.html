@@ -9,7 +9,7 @@
 
     <p>Please choose one of the following</p>
 
-    <form action="{% url 'save' %}" method="post">
+    <form action="{% url 'save_location' %}" method="post">
         {% csrf_token %}
         {{ form }}
     <table class="table">

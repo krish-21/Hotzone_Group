@@ -72,13 +72,23 @@
     <body>
 
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-            <a class="navbar-brand" href="/"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></a>
+            <a class="navbar-brand" href="{% url 'index' %}"><h2><span class="red">Hot</span><span class="green">Zone</span></h2></a>
             {% if user.is_authenticated %}
-                <h2>Hello, {{user.username}}<h2>
-                <ul class="nav justify-content-end">
+                <!-- <h3>Hello, {{user.username}}<h3> -->
+                <!-- <ul class="nav justify-content-end">
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout'%}">LogOut</a>
                         </li>
+                </ul> -->
+                <!-- <ul class="navbar-nav ml-auto mt-2">
+                    <li class="nav-item">
+                        <h3>Welcome {{user.username}}</h3>
+                    </li>
+                </ul> -->
+                <ul class="navbar-nav ml-auto mt-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout'%}">LogOut</a>
+                    </li>
                 </ul>
             {% endif %}
         </nav>

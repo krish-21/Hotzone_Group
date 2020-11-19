@@ -30,7 +30,7 @@ def get_location_api(name):
         return r.status_code, None
    
 
-def get_name(request):
+def search_location(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -40,8 +40,6 @@ def get_name(request):
             # process the data in form.cleaned_data as required
             name = form.cleaned_data['name']
             code, data = get_location_api(name)
-            # print(code)
-            # print(data)
             
             # redirect to a new URL:
             if data == None:
@@ -58,12 +56,9 @@ def get_name(request):
 
     return render(request, 'search.html', {'form': form})
 
-def save_address(request):
-    # print("inside save_address")
+def save_location(request):
     choice = request.POST.__getitem__('choice')
-    # print(choice)
     data = request.session['data'][int(choice)]
-    # print(data)
 
     l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
 
@@ -77,9 +72,6 @@ def save_address(request):
 
 def list_locations(request):
     data = Location.objects.order_by('name')
-    # print(data)
-    # return render(request, 'index.html')
-    # return render(request, 'list.html', data)
 
     template = loader.get_template('list.html')
     context = {
@@ -98,12 +90,12 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse('index'))
         else:
-            message = "credentials unauthenticated!"
+            message = "Invalid Credentials!"
             return render(request, 'error.html', {'message': message})
     else:
         return render(request, 'login.html')
 
 
-def logOut_view(request):
+def logout_view(request):
     logout(request)
     return render(request, 'logout.html')

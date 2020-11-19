@@ -6,7 +6,7 @@
 
 {% block main %}
     {% if user.is_authenticated %}
-        <form action="{% url 'search' %}" method="post">
+        <form action="{% url 'search_location' %}" method="post">
             {% csrf_token %}
             {{ form }}
             <input type="submit" value="Submit">
