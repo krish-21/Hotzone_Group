@@ -58,7 +58,8 @@ def query_location(name):
     #
     #
     return data
-   
+
+
 
 def search_location(request):
     # if this is a POST request we need to process the form data
@@ -96,7 +97,6 @@ def search_location(request):
                 #
                 #
 
-
     # if a GET (or any other method) we'll create a blank form
     else:
         if not request.user.is_authenticated:
@@ -116,16 +116,33 @@ def save_location(request):
             return render(request, 'error.html', {'message': 'No location selected'})
 
     data = request.session['data'][int(choice)]
+    chk=check_location_inDB(data)
+    if(chk==True):
+        return render(request, 'location_exists_indb.html')
+    else:
 
-    l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
+        l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
 
-    try:
-        l.save()
-    except Exception as e:
-        print(e)
+        try:
+            l.save()
+        except Exception as e:
+            print(e)
 
-    return render(request, 'success.html')
+        return render(request, 'success.html')
 
+def check_location_inDB(data):
+    name=data['nameEN']
+    address=data['addressEN']
+    x=data['x']
+    y=data['y']
+    if(Location.objects.filter(name=name).exists()):
+        v=Location.objects.filter(name=name)
+        if(v.values()[0]['x']==x and v.values()[0]['y']==y and v.values()[0]['address']==address):
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def list_locations(request):
     data = Location.objects.order_by('name')
