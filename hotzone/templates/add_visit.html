@@ -9,8 +9,13 @@
         <h5>Location Details Added</h5>
         <form action="{% url 'add_visit' %}" method="POST">
             {% csrf_token %}
-            <table>{{ form.as_table }}</table>
-            <input type="submit" value="Add Visit">
+            {% for field in form %}
+                <div class="fieldWrapper form-group" aria-required="true">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button class="btn link-button" type="submit" value="Submit">Add Visit</button>
         </form>
     {% endif %}
 {% endblock %}

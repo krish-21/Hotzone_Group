@@ -13,8 +13,8 @@
     <form action="{% url 'save_location' %}" method="post">
         {% csrf_token %}
         {{ form }}
-    <table class="table">
-        <thead>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
             <tr>
                 <th scope="col"></th>
                 <th scope="col">Name</th>
@@ -35,7 +35,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <input type="submit" value="Submit">
+    <button class="btn link-button" type="submit" value="Submit">Submit</button>
     </form>
     {% else %}
         <div class="alert alert-danger" role="alert">

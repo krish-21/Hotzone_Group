@@ -8,8 +8,13 @@
     {% if user.is_authenticated %}
         <form action="{% url 'search_location' %}" method="post">
             {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit">
+            {% for field in form %}
+                <div class="fieldWrapper form-group" aria-required="true">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button class="btn link-button" type="submit" value="Submit">Submit</button>
         </form>
     {% endif %}
 {% endblock %}
