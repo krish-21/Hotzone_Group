@@ -11,7 +11,8 @@
         <thead>
             <tr>
                 <th scope="col">Case Number</th>
-                <th scope="col">Patient Number</th>
+                <th scope="col">Patient ID</th>
+                <th scope="col">Patient Name</th>
                 <th scope="col">Virus</th>
                 <th scope="col">Date Confirmed</th>
                 <th scope="col">Case Type</th>
@@ -21,7 +22,8 @@
             {% for row in data %}
             <tr>
                 <td>{{row.pk}}</td>
-                <td>{{row.patient}}</td>
+                <td>{{row.patient.idNumber}}</td>
+                <td>{{row.patient.name}}</td>
                 <td>{{row.virus}}</td>
                 <td>{{row.dateConfirmed}}</td>
                 <td>{{row.caseType}}</td>
