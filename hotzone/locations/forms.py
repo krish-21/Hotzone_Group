@@ -15,6 +15,12 @@ class LocationForm(forms.Form):
     name = forms.CharField(label='Location', max_length=100)
 
 class AddVisitForm(forms.Form):
+    # iterable 
+    VISIT_TYPES =( 
+        ("Visit", "Visit"), 
+        ("Residence", "Residence"), 
+        ("Workplace", "Workplace"), 
+    ) 
     datefrom = forms.DateField(label="Date From", widget=forms.SelectDateWidget(years=list(range(2020,1899,-1))))
     dateto = forms.DateField(label="Date To", widget=forms.SelectDateWidget(years=list(range(2020,1899,-1))))
-    category = forms.CharField(label="Category", max_length=20)
+    category = forms.CharField(label="Category", max_length=9, widget=forms.Select(choices= VISIT_TYPES))
