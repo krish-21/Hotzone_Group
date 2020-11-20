@@ -180,16 +180,18 @@ def view_case(request):
     for obj in serializers.deserialize("json", data_json):
         if i == choice:
             pk = obj.object.pk
+            break
         else:
             i = i + 1
 
-    data = Case.objects.filter(pk=pk)
+    caseData = Case.objects.filter(pk=pk)
+    visitData = Visit.objects.filter(case=pk)
 
-    data_dict = json.loads(serializers.serialize("json", data))[0]
+    data_dict = json.loads(serializers.serialize("json", caseData))[0]
     request.session['case_pk'] = data_dict.get("pk")
     print(request.session['case_pk'])
 
-    return render(request, 'view_case.html', {'data': data})
+    return render(request, 'view_case.html', {'caseData': caseData, 'visitData': visitData})
 
 def add_visit (request):
     try:
