@@ -8,11 +8,13 @@
     {% if user.is_authenticated %}
     <h2>Saved Locations</h2>
     
-    <input class='form-control mb-3' type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a place...">
-    
-    <br/>
-    <table class="table table-bordered" id="myTable">
-        <thead class="thead-light">
+    <p>Search by:
+        <input class='form-control mb-3' type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Name">
+        <input class='form-control mb-3' type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Address">
+    </p>
+
+    <table class="table table-bordered table-striped" id="myTable">
+        <thead class="thead-dark">
             <tr>
                 <th scope="col" class='align-middle'>Name</th>
                 <th scope="col" class='align-middle'>Address</th>
@@ -31,21 +33,49 @@
             {% endfor %}
         </tbody>
     </table>
-    <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+    <button class="btn"><a href="{% url 'index' %}">Back</a></button>
 
     <script>
-        function myFunction() {
-            console.log('hi')
+        function myFunction1() {
             // Declare variables 
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
+            var filter, table, tr, td, i, txtValue;
+            input1 = document.getElementById("myInput1");
+            input2 = document.getElementById("myInput2");
+            input2.value = ""
+
+            filter = input1.value.toUpperCase();
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                } 
+            }
+        }
+
+        function myFunction2() {
+            // Declare variables 
+            var input, filter, table, tr, td, i, txtValue;
+            input1 = document.getElementById("myInput1");
+            input2 = document.getElementById("myInput2");
+            input1.value = ""
+
+            filter = input2.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            
+        
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
                 if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {

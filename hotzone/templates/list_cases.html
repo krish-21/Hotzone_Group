@@ -6,27 +6,27 @@
 
 {% block main %}
     {% if user.is_authenticated %}
-    <h2>Case Results</h2>
+    <h2>Saved Cases</h2>
 
     <p>Search by:
-    <input class="form-control mb-3" type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Case Number">
-    <input class="form-control mb-3" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="ID Document Number">
+        <input class="form-control mb-3" type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Case Number">
+        <input class="form-control mb-3" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="ID Document Number">
     </p>
 
 
     <form action="{% url 'view_case' %}" method="post">
         {% csrf_token %}
         {{ form }}
-    <table class="table" id="myTable">
+    <table class="table table-bordered table-striped" id="myTable">
         <thead class='thead-dark'>
             <tr>
                 <th></th>
-                <th scope="col">Case Number</th>
-                <th scope="col">Patient ID</th>
-                <th scope="col">Patient Name</th>
-                <th scope="col">Virus</th>
-                <th scope="col">Date Confirmed</th>
-                <th scope="col">Case Type</th>
+                <th scope="col" class='align-middle'>Case Number</th>
+                <th scope="col" class='align-middle'>Patient ID</th>
+                <th scope="col" class='align-middle'>Patient Name</th>
+                <th scope="col" class='align-middle'>Virus</th>
+                <th scope="col" class='align-middle'>Date Confirmed</th>
+                <th scope="col" class='align-middle'>Case Type</th>
             </tr>
         </thead>
         <tbody>
@@ -43,21 +43,21 @@
             {% endfor %}
         </tbody>
     </table>
+    <button class="btn"><a href="{% url 'index' %}">Back</a></button>
     <button class="btn link-button" type="submit" value="View Case">View Case</button>
     </form>
 
     <script>
         function myFunction1() {
-            console.log('hi')
             // Declare variables 
-            var input, filter, table, tr, td, i, txtValue;
+            var filter, table, tr, td, i, txtValue;
             input1 = document.getElementById("myInput1");
             input2 = document.getElementById("myInput2");
             input2.value = ""
+
             filter = input1.value.toUpperCase();
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
-            console.log(filter)
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
@@ -74,16 +74,15 @@
         }
 
         function myFunction2() {
-            console.log('hi')
             // Declare variables 
             var input, filter, table, tr, td, i, txtValue;
             input1 = document.getElementById("myInput1");
-            input1.value = ""
             input2 = document.getElementById("myInput2");
+            input1.value = ""
+            
             filter = input2.value.toUpperCase();
             table = document.getElementById("myTable");
             tr = table.getElementsByTagName("tr");
-            console.log(filter)
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {

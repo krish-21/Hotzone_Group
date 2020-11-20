@@ -11,4 +11,17 @@
     <button type="submit" class="btn">
         <a href ="{% url 'login'%}">Return to Login page</a>
     </button>
+    <p>You will be redirected in <span id="time">5</span> seconds</p>
+
+    <script>
+        time = 5;
+        setInterval(function(){
+            time--;
+            document.getElementById("time").innerText = time;
+            if(time == 0) {
+                console.log("Hi")
+                window.location.href = '/'
+            }
+         }, 1000);
+    </script>
 {% endblock %}

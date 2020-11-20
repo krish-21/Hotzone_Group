@@ -35,7 +35,8 @@
             {% endfor %}
         </tbody>
     </table>
-    <button class="btn link-button" type="submit" value="Submit">Submit</button>
+    <button class="btn"><a href="{% url 'search_location' %}">Back</a></button>
+    <button class="btn link-button" type="submit" value="Submit">Select Location</button>
     </form>
     {% else %}
         <div class="alert alert-danger" role="alert">

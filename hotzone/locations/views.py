@@ -1,5 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -15,88 +14,84 @@ from .models import Location, Case, Patient, Visit
 
 # Create your views here.
 
+# View for Login Page
 def login_view(request):
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        # extract data from request
         username = request.POST['username']
         password = request.POST['password']
+        
+        # Authenticate user using Django built-in function
         user = authenticate(username=username, password=password)
+        
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(reverse('index'))
         else:
             message = "Invalid Credentials!"
             return render(request, 'error.html', {'message': message})
+    
+    # if a GET (or any other method) we'll redirect to login page
     else:
         return render(request, 'login.html')
 
 
+# View for Logout Page
 def logout_view(request):
     logout(request)
     return render(request, 'logout.html')
 
-
+# View for HomePage
 class HomePage(TemplateView):
     template_name = "index.html"
 
+
+# Helper function to make API Call and return status code & data
 def get_location_api(name):
-    # print(name)
+    # make the API Call
     r = requests.get('https://geodata.gov.hk/gs/api/v1.0.0/locationSearch?q=' + name)
+    
     # check response code & handle it
     if r.status_code == 200:
         data = r.json()
         filtered = []
         for row in data:
+            # Extract useful data
             filtered.append({key: row[key] for key in ['x', 'y', 'nameEN', 'addressEN']})
         return 200, filtered
     else:
         return r.status_code, None
 
-def query_location(name):
-    data = None
-    #
-    #
-    #   Add code here
-    #
-    #
-    return data
 
+# View for Seacrh Locations Page
 def search_location(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        
         # create a form instance and populate it with data from the request:
         form = LocationForm(request.POST)
+        
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
+            # extract name from form.cleaned_data
             name = form.cleaned_data['name']
 
-            # Query the existing database for location
-            data = query_location(name)
-
-            # If no data returned, make the API call
+            # Make the API call
+            code, data = get_location_api(name)
+                        
+            # redirect to a new URL:
+            # if no data returned, return GeoLocation Error
             if data == None:
-                code, data = get_location_api(name)
-                            
-                # redirect to a new URL:
-                if data == None:
-                    # if no data returned, return GeoLocation Error
-                    message = "Error 400: Bad Request. Please try again!" if code == 400 else "Error 500: Internal Server Error. Please try again!"
-                    return render(request, 'error.html', {'message': message})
-                else:
-                    # if location call successful, return results
-                    request.session['data'] = data
-                    return render(request, 'location_results.html', {'data': data})
+                message = "Error 400: Bad Request. Please try again!" if code == 400 else "Error 500: Internal Server Error. Please try again!"
+                return render(request, 'error.html', {'message': message})
             
-            # location exists in the databse
+            # if location call successful, save data as session variable & render results
             else:
-                pass
-                #
-                #
-                #   Add code here
-                #
-                #
-
-    # if a GET (or any other method) we'll create a blank form
+                request.session['data'] = data
+                return render(request, 'location_results.html', {'data': data})
+            
+    # if a GET (or any other method) we'll create a blank  Location Form
     else:
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
@@ -105,7 +100,30 @@ def search_location(request):
 
     return render(request, 'search.html', {'form': form})
 
+
+# Helper function to check if a Location already exists in database
+def check_location_inDB(data):
+    # Extract data from function argument
+    name = data['nameEN']
+    address = data['addressEN']
+    x = data['x']
+    y = data['y']
+
+    # Search database by name
+    if(Location.objects.filter(name=name).exists()):
+        v = Location.objects.filter(name=name)
+        # Check all other fields
+        if(v.values()[0]['x']==x and v.values()[0]['y']==y and v.values()[0]['address']==address):
+            return True, v.values_list('pk', flat=True)[0]
+        else:
+            return False, None
+    else:
+        return False, None
+
+
+# View for Save Location Page
 def save_location(request):
+    # Extract information from request
     try:
         choice = request.POST.__getitem__('choice')
     except Exception as e:
@@ -114,74 +132,66 @@ def save_location(request):
         else:
             return render(request, 'error.html', {'message': 'No location selected'})
 
+    # Select information from session variable
     data = request.session['data'][int(choice)]
-    chk, location_pk =check_location_inDB(data)
+    
+    # Query the existing Location database
+    chk, location_pk = check_location_inDB(data)
 
-    if(chk==True):
+    # If location exists, save primary key of Location to session variable
+    if(chk == True):
         request.session['location_pk'] = location_pk
-        
 
+    # Else, create Location object, save to database & save primary key to session variable
     else:
         l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
-
-    try:
-        l.save()
-        request.session['location_pk'] = l.pk
-    except Exception as e:
-        print(e)
+        
+        try:
+            l.save()
+            request.session['location_pk'] = l.pk
+        except Exception as e:
+            print("Exception: ")
+            print(e)
 
     form = AddVisitForm()
+    
     return render(request, 'add_visit.html', {'form': form, 'wasPresent': chk})
 
-def check_location_inDB(data):
-    name=data['nameEN']
-    address=data['addressEN']
-    x=data['x']
-    y=data['y']
-    if(Location.objects.filter(name=name).exists()):
-        v=Location.objects.filter(name=name)
-        if(v.values()[0]['x']==x and v.values()[0]['y']==y and v.values()[0]['address']==address):
-            return True, v.values_list('pk', flat=True)[0]
-        else:
-            return False, None
-    else:
-        return False, None
 
+# View for List Locations Page
 def list_locations(request):
+    # Query the database to get all locations
     data = Location.objects.order_by('name')
 
-    template = loader.get_template('list_locations.html')
-    context = {
-        'data': data,
-    }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'list_locations.html', {'data': data})
 
 
+# View for List Cases Page
 def list_cases(request):
+    # Query the database to get all locations
     data = Case.objects.all()
     
+    # Serialize data to json
     data_json = serializers.serialize('json', data)
 
+    # Save data to session variable
     request.session['data'] = data_json
     
     return render(request, 'list_cases.html', {'data': data})
 
 def view_case(request):
-    choice = -1
-    try:
-        if request.method=='POST':
+    # if this is a POST request we need to process the form data
+    if request.method=='POST':
+        # Extract data from request
+        try:
             choice = int(request.POST.__getitem__('choice'))
-        else: 
-            pass
-    except Exception as e:
-        if not request.user.is_authenticated:
-            return render(request, 'error.html', {'message': 'Please login to access this page!'})
-        else:
+        except Exception as e:
             return render(request, 'error.html', {'message': 'No case selected'})
-    
-    data_json = request.session['data']
 
-    if choice!=-1:
+        # Get data from session variable
+        data_json = request.session['data']
+
+        # Extract primary key of selected case
         i = 0
         for obj in serializers.deserialize("json", data_json):
             if i == choice:
@@ -189,24 +199,34 @@ def view_case(request):
                 break
             else:
                 i = i + 1
+    
+    # if a GET (or any other method), use session variables for data
     else:
-        pk = request.session['case_pk']
-
+        try:
+            # Get Location primary key from session variable
+            pk = request.session['case_pk']
+        except Exception as e:
+            return render(request, 'error.html', {'message': 'No case selected'})
+            
+    # Query database for case & visit data
     caseData = Case.objects.filter(pk=pk)
     visitData = Visit.objects.filter(case=pk)
 
-    data_dict = json.loads(serializers.serialize("json", caseData))[0]
-    request.session['case_pk'] = data_dict.get("pk")
-    print(request.session['case_pk'])
+    # Save Location Primary Key to session variable
+    request.session['case_pk'] = pk
 
     return render(request, 'view_case.html', {'caseData': caseData, 'visitData': visitData})
 
+
+# View for Add Visit Page
 def add_visit (request):
+    # Get Case Primary Key from session variable
     try:
         case_pk = request.session['case_pk']    
     except Exception as e:
         return render(request, 'error.html', {'message': 'No case selected'})
 
+    # Get Location Primary Key from session variable
     try:
         location_pk = request.session['location_pk']    
     except Exception as e:
@@ -214,12 +234,13 @@ def add_visit (request):
     
     print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
 
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = AddVisitForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
+            # extract visit data from form.cleaned_data
             v = Visit(
                 case=Case.objects.get(pk=case_pk), 
                 location=Location.objects.get(pk=location_pk),
@@ -227,7 +248,7 @@ def add_visit (request):
                 dateTo=form.cleaned_data['dateto'],
                 category=form.cleaned_data['category'])
             
-            # here saving must be fail as detail 
+            # Save Visit to database
             try:
                 v.save()
             except Exception as e:
@@ -235,6 +256,7 @@ def add_visit (request):
 
             return render(request, 'add_visit_success.html', {'case_pk': case_pk})
 
+    # if a GET (or any other method) we'll create a blank Visit Form
     else:
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})

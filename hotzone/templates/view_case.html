@@ -6,13 +6,14 @@
 
 {% block main %}
     <h2>Case Details</h2>
+
     <br/>
     
     <div class='row'>
         <div class='col'>
             <h4 class='text-center'>Case</h4>
             <table class='table table-bordered'>
-                <thead class='thead-light'>
+                <thead class='thead-dark'>
                     <tr>
                         <th scope='col' class='align-middle'>Case No.</th>
                         <th scope='col' class='align-middle'>Date Confirmed</th>
@@ -33,7 +34,7 @@
         <div class='col'>
             <h4 class='text-center'>Patient</h4>
             <table class='table table-bordered'>
-                <thead class='thead-light'>
+                <thead class='thead-dark'>
                     <tr>
                         <th scope='col' class='align-middle'>Patient Name</th>
                         <th scope='col' class='align-middle'>ID Number</th>
@@ -54,7 +55,7 @@
         <div class='col'>
             <h4 class='text-center'>Virus</h4>
             <table class='table table-bordered'>
-                <thead class='thead-light'>
+                <thead class='thead-dark'>
                     <tr>
                         <th scope='col' class='align-middle'>Virus Name</th>
                         <th scope='col' class='align-middle'>Common Name</th>
@@ -77,7 +78,7 @@
     {% if visitData %}
     <h4 class='text-center'>Visits</h4>
     <table class='table table-bordered'>
-        <thead class='thead-light'>
+        <thead class='thead-dark'>
             <th scope='col' class='align-middle'>Location</th>
             <th scope='col' class='align-middle'>Address</th>
             <th scope='col' class='align-middle'>X</th>
@@ -106,6 +107,8 @@
 
     {% endif %}
     <br/>
+    <button class="btn"><a href="{% url 'list_cases' %}">Back</a></button>
+    <button class="btn"><a href="{% url 'index' %}">Home</a></button>
     <button class="btn"><a href="{% url 'search_location' %}">Add Visit</a></button>
 
 {% endblock %}
