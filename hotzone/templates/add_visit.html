@@ -6,6 +6,8 @@
 
 {% block main %}
     {% if user.is_authenticated %}
+
+        <h3>Visit Details</h3>
         {% if wasPresent %}
         <div class="alert alert-info" role="alert">
             Location already saved in database.
