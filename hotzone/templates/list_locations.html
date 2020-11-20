@@ -6,17 +6,18 @@
 
 {% block main %}
     {% if user.is_authenticated %}
-    <h2>LOCATIONS</h2>
+    <h2>Saved Locations</h2>
     
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+    <input class='form-control mb-3' type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for a place...">
     
-    <table class="table" id="myTable">
-        <thead>
+    <br/>
+    <table class="table table-bordered" id="myTable">
+        <thead class="thead-light">
             <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Address</th>
-                <th scope="col">X-Coordinate</th>
-                <th scope="col">Y-Coordinate</th>
+                <th scope="col" class='align-middle'>Name</th>
+                <th scope="col" class='align-middle'>Address</th>
+                <th scope="col" class='align-middle'>X-Coordinate</th>
+                <th scope="col" class='align-middle'>Y-Coordinate</th>
             </tr>
         </thead>
         <tbody>

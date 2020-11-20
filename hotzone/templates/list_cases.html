@@ -8,10 +8,11 @@
     {% if user.is_authenticated %}
     <h2>Case Results</h2>
 
-    <p>Please choose one of the following</p>
+    <p>Search by:
+    <input class="form-control mb-3" type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Case Number">
+    <input class="form-control mb-3" type="text" id="myInput2" onkeyup="myFunction2()" placeholder="ID Document Number">
+    </p>
 
-    <input type="text" id="myInput1" onkeyup="myFunction1()" placeholder="Search by Case Number..">
-    <input type="text" id="myInput2" onkeyup="myFunction2()" placeholder="Search by Patient Number..">
 
     <form action="{% url 'view_case' %}" method="post">
         {% csrf_token %}
@@ -42,7 +43,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <input type="submit" value="View Case">
+    <button class="btn link-button" type="submit" value="View Case">View Case</button>
     </form>
 
     <script>
