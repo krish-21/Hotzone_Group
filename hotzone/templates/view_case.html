@@ -6,35 +6,104 @@
 
 {% block main %}
     <h2>Case Details</h2>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Case Number</th>
-                <th scope="col">Patient ID</th>
-                <th scope="col">Patient Name</th>
-                <th scope="col">Virus</th>
-                <th scope="col">Date Confirmed</th>
-                <th scope="col">Case Type</th>
-            </tr>
+    <br/>
+    
+    <div class='row'>
+        <div class='col'>
+            <table class='table table-bordered'>
+                <thead class='thead-light'>
+                    <tr>
+                        <th scope='col' class='align-middle'>Case No.</th>
+                        <th scope='col' class='align-middle'>Date Confirmed</th>
+                        <th scope='col' class='align-middle'>Case Origin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in caseData %}
+                    <tr>
+                        <td>{{row.pk}}</td>
+                        <td>{{row.dateConfirmed}}</td>
+                        <td>{{row.caseType}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class='col'>
+            <table class='table table-bordered'>
+                <thead class='thead-light'>
+                    <tr>
+                        <th scope='col' class='align-middle'>Patient Name</th>
+                        <th scope='col' class='align-middle'>ID Number</th>
+                        <th scope='col' class='align-middle'>Date of Birth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in caseData %}
+                    <tr>
+                        <td>{{row.patient.name}}</td>
+                        <td>{{row.patient.idNumber}}</td>
+                        <td>{{row.patient.dateOfBirth}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class='col'>
+            <table class='table table-bordered'>
+                <thead class='thead-light'>
+                    <tr>
+                        <th scope='col' class='align-middle'>Virus Name</th>
+                        <th scope='col' class='align-middle'>Common Name</th>
+                        <th scope='col' class='align-middle'>Max. Period</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in caseData %}
+                    <tr>
+                        <td>{{row.virus.name}}</td>
+                        <td>{{row.virus.commonName}}</td>
+                        <td>{{row.virus.maxInfectiousPeriod}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/>
+    {% if visitData %}
+    <table class='table table-bordered'>
+        <thead class='thead-light'>
+            <th scope='col' class='align-middle'>Location</th>
+            <th scope='col' class='align-middle'>Address</th>
+            <th scope='col' class='align-middle'>X</th>
+            <th scope='col' class='align-middle'>Y</th>
+            <th scope='col' class='align-middle'>Date From</th>
+            <th scope='col' class='align-middle'>Date To</th>
+            <th scope='col' class='align-middle'>Category</th>
         </thead>
         <tbody>
-            {% for row in data %}
+            {% for row in visitData %}
             <tr>
-                <td>{{row.pk}}</td>
-                <td>{{row.patient.idNumber}}</td>
-                <td>{{row.patient.name}}</td>
-                <td>{{row.virus}}</td>
-                <td>{{row.dateConfirmed}}</td>
-                <td>{{row.caseType}}</td>
-                <td>
-                    <form action="{% url 'search_location' %}" method="GET">
-                        <input type="submit" value="Add Visit">
-                    </form>
-                </td>
+                <td>{{row.location.name}}</td>
+                <td>{{row.location.address}}</td>
+                <td>{{row.location.x}}</td>
+                <td>{{row.location.y}}</td>
+                <td>{{row.dateFrom}}</td>
+                <td>{{row.dateTo}}</td>
+                <td>{{row.category}}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    
+
+    {% else %}
+    <strong>No visit data recorded.</strong>
+
+    {% endif %}
+    <br/>
+    <form action="{% url 'search_location' %}" method="GET">
+        <button class="btn btn-link" type="submit" value="Add Visit"><a>Add Visit</a></button>
+    </form>
+
 {% endblock %}
