@@ -117,9 +117,9 @@ def save_location(request):
     data = request.session['data'][int(choice)]
     chk, location_pk =check_location_inDB(data)
 
-
     if(chk==True):
         request.session['location_pk'] = location_pk
+        
 
     else:
         l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
@@ -131,7 +131,7 @@ def save_location(request):
         print(e)
 
     form = AddVisitForm()
-    return render(request, 'add_visit.html', {'form': form})
+    return render(request, 'add_visit.html', {'form': form, 'wasPresent': chk})
 
 def check_location_inDB(data):
     name=data['nameEN']
