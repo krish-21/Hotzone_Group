@@ -80,7 +80,7 @@ def search_location(request):
                 # redirect to a new URL:
                 if data == None:
                     # if no data returned, return GeoLocation Error
-                    message = "Error 400: Bad Request" if code == 400 else "Error 500: Internal Server Error"
+                    message = "Error 400: Bad Request! Please Try Again" if code == 400 else "Error 500: Internal Server Error! Please Try Again"
                     return render(request, 'error.html', {'message': message})
                 else:
                     # if location call successful, return results
@@ -120,7 +120,7 @@ def save_location(request):
 
     if(chk==True):
         request.session['location_pk'] = location_pk
-        return render(request, 'location_exists_indb.html')
+
     else:
         l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
 
@@ -130,7 +130,8 @@ def save_location(request):
     except Exception as e:
         print(e)
 
-    return render(request, 'success.html')
+    form = AddVisitForm()
+    return render(request, 'add_visit.html', {'form': form})
 
 def check_location_inDB(data):
     name=data['nameEN']
