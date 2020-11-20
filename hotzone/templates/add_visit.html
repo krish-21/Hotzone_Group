@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Enter Visit Details
+{% endblock %}
+
+{% block main %}
+    {% if user.is_authenticated %}
+        <form action="{% url 'add_visit' %}" method="POST">
+            {% csrf_token %}
+            <table>{{ form.as_table }}</table>
+            <input type="submit" value="Add Visit">
+        </form>
+    {% endif %}
+{% endblock %}
