@@ -40,10 +40,14 @@ class Virus(models.Model):
 
 
 class Case(models.Model):
+    CASE_TYPES = (
+        ('Local', 'Local'),
+        ('Imported', 'Imported'),
+    )
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     virus = models.ForeignKey(Virus, on_delete=models.CASCADE)
     dateConfirmed = models.DateField()
-    caseType = models.CharField(max_length=8)
+    caseType = models.CharField(max_length=8, choices=CASE_TYPES)
 
     def __str__(self):
         return f'{self.patient.name} {self.virus.name}'
@@ -60,24 +64,17 @@ class Location(models.Model):
 
 
 class Visit(models.Model):
+    VISIT_TYPES =( 
+        ("Visit", "Visit"), 
+        ("Residence", "Residence"), 
+        ("Workplace", "Workplace"), 
+    ) 
     case = models.ForeignKey(Case, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     dateFrom = models.DateField()
     dateTo = models.DateField()
-    category = models.CharField(max_length=20)
+    category = models.CharField(max_length=20, choices=VISIT_TYPES)
 
     def __str__(self):
         return f' {self.case.id} {self.location.name}'
         
-
-#Old Code
-'''
-class Location(models.Model):
-    name = models.CharField(max_length=200)
-    address = models.CharField(max_length=200)
-    x = models.IntegerField(default=0)
-    y= models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-'''
