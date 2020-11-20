@@ -21,7 +21,8 @@
             <tr>
                 <th></th>
                 <th scope="col">Case Number</th>
-                <th scope="col">Patient Number</th>
+                <th scope="col">Patient ID</th>
+                <th scope="col">Patient Name</th>
                 <th scope="col">Virus</th>
                 <th scope="col">Date Confirmed</th>
                 <th scope="col">Case Type</th>
@@ -32,7 +33,8 @@
             <tr>
                 <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td>
                 <td>{{row.pk}}</td>
-                <td>{{row.patient}}</td>
+                <td>{{row.patient.idNumber}}</td>
+                <td>{{row.patient.name}}</td>
                 <td>{{row.virus}}</td>
                 <td>{{row.dateConfirmed}}</td>
                 <td>{{row.caseType}}</td>
