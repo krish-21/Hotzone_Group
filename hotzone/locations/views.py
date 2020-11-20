@@ -10,7 +10,7 @@ import json
 
 from django.views.generic import TemplateView
 
-from .forms import LocationForm
+from .forms import LocationForm, AddVisitForm
 from .models import Location, Case, Patient, Visit
 
 # Create your views here.
@@ -59,11 +59,6 @@ def query_location(name):
     #
     #
     return data
-<<<<<<< HEAD
-
-
-=======
->>>>>>> parent of 61f2fde... Revert "add_visit partly done"
 
 def search_location(request):
     # if this is a POST request we need to process the form data
@@ -120,27 +115,22 @@ def save_location(request):
             return render(request, 'error.html', {'message': 'No location selected'})
 
     data = request.session['data'][int(choice)]
-    chk=check_location_inDB(data)
+    chk, location_pk =check_location_inDB(data)
+
+
     if(chk==True):
+        request.session['location_pk'] = location_pk
         return render(request, 'location_exists_indb.html')
     else:
-
         l = Location(name=data['nameEN'], address=data['addressEN'], x=data['x'], y=data['y'])
 
-<<<<<<< HEAD
-        try:
-            l.save()
-        except Exception as e:
-            print(e)
-=======
     try:
         l.save()
         request.session['location_pk'] = l.pk
     except Exception as e:
         print(e)
->>>>>>> parent of 61f2fde... Revert "add_visit partly done"
 
-        return render(request, 'success.html')
+    return render(request, 'success.html')
 
 def check_location_inDB(data):
     name=data['nameEN']
@@ -150,11 +140,11 @@ def check_location_inDB(data):
     if(Location.objects.filter(name=name).exists()):
         v=Location.objects.filter(name=name)
         if(v.values()[0]['x']==x and v.values()[0]['y']==y and v.values()[0]['address']==address):
-            return True
+            return True, v.values_list('pk', flat=True)[0]
         else:
-            return False
+            return False, None
     else:
-        return False
+        return False, None
 
 def list_locations(request):
     data = Location.objects.order_by('name')
@@ -214,13 +204,31 @@ def add_visit (request):
     
     print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
 
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = AddVisitForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            v = Visit(
+                case=Case.objects.get(pk=case_pk), 
+                location=Location.objects.get(pk=location_pk),
+                dateFrom=form.cleaned_data['datefrom'],
+                dateTo=form.cleaned_data['dateto'],
+                category=form.cleaned_data['category'])
+            
+            # here saving must be fail as detail 
+            try:
+                v.save()
+            except Exception as e:
+                return render(request, 'error.html', {'message': 'Cannot save visit'})
 
-    v = Visit(case=Case.objects.get(pk=case_pk), location=Location.objects.get(pk=location_pk))
-    # here saving must be fail as detail 
-    try:
-        v.save()
-    except Exception as e:
-        print(e)
-    
-    return render(request, 'add_visit.html')
+            return render(request, 'add_visit_success.html')
+
+    else:
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        else:
+            form = AddVisitForm()
+        return render(request, 'add_visit.html', {'form': form})
 

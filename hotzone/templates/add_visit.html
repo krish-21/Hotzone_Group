@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Success
+    Enter Visit Details
 {% endblock %}
 
 {% block main %}
     {% if user.is_authenticated %}
-        <div class="form-group">
-            <span style="color: green;">Succesfuly add a visit record</span>
-        </div>
-        <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+        <form action="{% url 'add_visit' %}" method="POST">
+            {% csrf_token %}
+            <table>{{ form.as_table }}</table>
+            <input type="submit" value="Add Visit">
+        </form>
     {% endif %}
 {% endblock %}

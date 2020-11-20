@@ -1,15 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Location Exists
+    Success
 {% endblock %}
 
 {% block main %}
     {% if user.is_authenticated %}
         <div class="form-group">
-            <span style="color: green;">Location already exists in the database!</span>
+            <span style="color: green;">Succesfuly stored visit data</span>
         </div>
         <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
-        <button class="btn search"><a href="{% url 'add_visit' %}">Continue to Add Visit</a></button>
     {% endif %}
 {% endblock %}
