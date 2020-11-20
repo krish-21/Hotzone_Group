@@ -80,7 +80,7 @@ def search_location(request):
                 # redirect to a new URL:
                 if data == None:
                     # if no data returned, return GeoLocation Error
-                    message = "Error 400: Bad Request! Please Try Again" if code == 400 else "Error 500: Internal Server Error! Please Try Again"
+                    message = "Error 400: Bad Request. Please try again!" if code == 400 else "Error 500: Internal Server Error. Please try again!"
                     return render(request, 'error.html', {'message': message})
                 else:
                     # if location call successful, return results
@@ -167,8 +167,12 @@ def list_cases(request):
     return render(request, 'list_cases.html', {'data': data})
 
 def view_case(request):
+    choice = -1
     try:
-        choice = int(request.POST.__getitem__('choice'))
+        if request.method=='POST':
+            choice = int(request.POST.__getitem__('choice'))
+        else: 
+            pass
     except Exception as e:
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
@@ -177,13 +181,16 @@ def view_case(request):
     
     data_json = request.session['data']
 
-    i = 0
-    for obj in serializers.deserialize("json", data_json):
-        if i == choice:
-            pk = obj.object.pk
-            break
-        else:
-            i = i + 1
+    if choice!=-1:
+        i = 0
+        for obj in serializers.deserialize("json", data_json):
+            if i == choice:
+                pk = obj.object.pk
+                break
+            else:
+                i = i + 1
+    else:
+        pk = request.session['case_pk']
 
     caseData = Case.objects.filter(pk=pk)
     visitData = Visit.objects.filter(case=pk)
@@ -226,7 +233,7 @@ def add_visit (request):
             except Exception as e:
                 return render(request, 'error.html', {'message': 'Cannot save visit'})
 
-            return render(request, 'add_visit_success.html')
+            return render(request, 'add_visit_success.html', {'case_pk': case_pk})
 
     else:
         if not request.user.is_authenticated:

@@ -10,6 +10,7 @@
     
     <div class='row'>
         <div class='col'>
+            <h4 class='text-center'>Case</h4>
             <table class='table table-bordered'>
                 <thead class='thead-light'>
                     <tr>
@@ -30,6 +31,7 @@
             </table>
         </div>
         <div class='col'>
+            <h4 class='text-center'>Patient</h4>
             <table class='table table-bordered'>
                 <thead class='thead-light'>
                     <tr>
@@ -50,6 +52,7 @@
             </table>
         </div>
         <div class='col'>
+            <h4 class='text-center'>Virus</h4>
             <table class='table table-bordered'>
                 <thead class='thead-light'>
                     <tr>
@@ -72,6 +75,7 @@
     </div>
     <br/>
     {% if visitData %}
+    <h4 class='text-center'>Visits</h4>
     <table class='table table-bordered'>
         <thead class='thead-light'>
             <th scope='col' class='align-middle'>Location</th>
@@ -102,8 +106,6 @@
 
     {% endif %}
     <br/>
-    <form action="{% url 'search_location' %}" method="GET">
-        <button class="btn btn-link" type="submit" value="Add Visit"><a>Add Visit</a></button>
-    </form>
+    <button class="btn"><a href="{% url 'search_location' %}">Add Visit</a></button>
 
 {% endblock %}
