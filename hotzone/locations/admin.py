@@ -14,7 +14,7 @@ class StaffUserAdmin(UserAdmin):
     fieldsets = (
         *UserAdmin.fieldsets,
         (
-            'CHP Stuff Number',
+            'CHP Staff Number',
             {
                 'fields': ('chpStaffNumber',)
             }
