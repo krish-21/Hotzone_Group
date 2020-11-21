@@ -18,7 +18,7 @@
     <form action="{% url 'view_case' %}" method="post">
         {% csrf_token %}
         {{ form }}
-    <table class="table table-bordered table-striped" id="myTable">
+    <table class="table table-bordered table-hover" id="myTable">
         <thead class='thead-dark'>
             <tr>
                 <th scope="col" class='align-middle'>Case Number</th>
