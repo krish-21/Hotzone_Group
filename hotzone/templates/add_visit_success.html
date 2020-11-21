@@ -5,12 +5,10 @@
 {% endblock %}
 
 {% block main %}
-    {% if user.is_authenticated %}
-        <div class="alert alert-success" role="alert">
-            Successfuly saved Visit data.
-        </div>
+    <div class="alert alert-success" role="alert">
+        Successfuly saved Visit data.
+    </div>
 
-        <button class="btn"><a href="{% url 'view_case' %}">View Case</a></button>
-        <button class="btn"><a href="{% url 'index' %}">Home</a></button>
-    {% endif %}
+    <button class="btn"><a href="{% url 'view_case' %}">View Case</a></button>
+    <button class="btn"><a href="{% url 'index' %}">Home</a></button>
 {% endblock %}
