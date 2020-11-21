@@ -72,6 +72,10 @@ def get_location_api(name):
 def search_location(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
+
+        # check if user is authenticated in POST method
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
         
         # create a form instance and populate it with data from the request:
         form = LocationForm(request.POST)
@@ -97,6 +101,7 @@ def search_location(request):
             
     # if a GET (or any other method) we'll create a blank  Location Form
     else:
+        # check if user is authenticated in GET method
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         else:
@@ -108,7 +113,7 @@ def search_location(request):
             
             # If user is authenticated, following the logic and selected a case before, action is permitted
             form = LocationForm()
-            return render(request, 'search.html', {'form': form})
+            return render(request, 'search.html', {'form': form, 'case_pk' : case_pk})
 
 
 # Helper function to check if a Location already exists in database
@@ -170,6 +175,7 @@ def save_location(request):
 
 # View for List Locations Page
 def list_locations(request):
+    # check if user is authenticated in GET method
     if not request.user.is_authenticated:
         return render(request, 'error.html', {'message': 'Please login to access this page!'})
     else:
@@ -181,6 +187,7 @@ def list_locations(request):
 
 # View for List Cases Page
 def list_cases(request):
+    # check if user is authenticated in GET method
     if not request.user.is_authenticated:
         return render(request, 'error.html', {'message': 'Please login to access this page!'})
     else:
@@ -198,6 +205,10 @@ def list_cases(request):
 def view_case(request):
     # if this is a POST request we need to process the form data
     if request.method=='POST':
+        # check if user is authenticated in POST method
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+
         # Extract data from request
         try:
             choice = int(request.POST.__getitem__('choice'))
@@ -218,6 +229,7 @@ def view_case(request):
     
     # if a GET (or any other method), use session variables for data
     else:
+        # check if user is authenticated in GET method
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         try:
@@ -239,6 +251,10 @@ def view_case(request):
 # View for Add Visit Page
 def add_visit (request):
     if request.method == 'POST':
+        # check if user is authenticated in POST method
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+
         # Get Case Primary Key from session variable
         try:
             case_pk = request.session['case_pk']
@@ -275,6 +291,7 @@ def add_visit (request):
 
     # if a GET (or any other method) we'll create a blank Visit Form
     else:
+        # check if user is authenticated in GET method
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         else:
