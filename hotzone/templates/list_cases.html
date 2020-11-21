@@ -21,13 +21,13 @@
     <table class="table table-bordered table-striped" id="myTable">
         <thead class='thead-dark'>
             <tr>
-                <th></th>
                 <th scope="col" class='align-middle'>Case Number</th>
                 <th scope="col" class='align-middle'>Patient ID</th>
                 <th scope="col" class='align-middle'>Patient Name</th>
                 <th scope="col" class='align-middle'>Virus</th>
                 <th scope="col" class='align-middle'>Date Confirmed</th>
                 <th scope="col" class='align-middle'>Case Type</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -38,13 +38,14 @@
             {% else %}
                 {% for row in data %}
                 <tr>
-                    <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td>
+                    <!-- <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td> -->
                     <td>{{row.pk}}</td>
                     <td>{{row.patient.idNumber}}</td>
                     <td>{{row.patient.name}}</td>
                     <td>{{row.virus}}</td>
                     <td>{{row.dateConfirmed|date:"d/m/Y" }}</td>
                     <td>{{row.caseType}}</td>
+                    <td><button name="choice" class="btn btn-dark" type="submit" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">Select</button></td>
                 </tr>
                 {% endfor %}
             {% endif %}
@@ -84,7 +85,7 @@
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1];
+                td = tr[i].getElementsByTagName("td")[0];
                 if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -112,7 +113,7 @@
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[2];
+                td = tr[i].getElementsByTagName("td")[1];
                 if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -140,7 +141,7 @@
         
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
                 if (td) {
                 txtValue = td.textContent || td.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
