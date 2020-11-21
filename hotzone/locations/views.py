@@ -117,7 +117,7 @@ def search_location(request):
 
 
 # Helper function to check if a Location already exists in database
-def check_location_inDB(data):
+def check_location_in_DB(data):
     # Extract data from function argument
     name = data['nameEN']
     address = data['addressEN']
@@ -151,7 +151,7 @@ def save_location(request):
     data = request.session['data'][int(choice)]
     
     # Query the existing Location database
-    chk, location_pk = check_location_inDB(data)
+    chk, location_pk = check_location_in_DB(data)
 
     # If location exists, save primary key of Location to session variable
     if(chk == True):
@@ -182,7 +182,12 @@ def list_locations(request):
         # Query the database to get all locations
         data = Location.objects.order_by('name')
 
-        return render(request, 'list_locations.html', {'data': data})
+        # If data is empty
+        if not data:
+            return render(request, 'list_locations.html', {'data': data, 'empty': True})
+
+        # Else
+        return render(request, 'list_locations.html', {'data': data, 'empty': False})
 
 
 # View for List Cases Page
@@ -193,14 +198,20 @@ def list_cases(request):
     else:
         # Query the database to get all locations
         data = Case.objects.all()
+
+        # If data is empty
+        if not data:
+            return render(request, 'list_cases.html', {'data': data, 'empty': True})
         
+        # Else
+
         # Serialize data to json
         data_json = serializers.serialize('json', data)
 
         # Save data to session variable
         request.session['data'] = data_json
         
-        return render(request, 'list_cases.html', {'data': data})
+        return render(request, 'list_cases.html', {'data': data, 'empty': False})
 
 def view_case(request):
     # if this is a POST request we need to process the form data

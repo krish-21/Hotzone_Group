@@ -23,24 +23,41 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in data %}
+            {% if empty == True %}
             <tr>
-                <td>{{row.name}}</td>
-                <td>{{row.address}}</td>
-                <td>{{row.x}}</td>
-                <td>{{row.y}}</td>
+                <td colspan="4" id="emptyTable">No data to display</td>
             </tr>
-            {% endfor %}
+            {% else %}
+                {% for row in data %}
+                <tr>
+                    <td>{{row.name}}</td>
+                    <td>{{row.address}}</td>
+                    <td>{{row.x}}</td>
+                    <td>{{row.y}}</td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
     </table>
     <button class="btn"><a href="{% url 'index' %}">Back</a></button>
 
     <script>
+        // If data is empty, disbale the text fields
+        try{
+            if (document.getElementById("emptyTable").innerText == "No data to display") {
+                document.getElementById("myInput1").disabled = true
+                document.getElementById("myInput2").disabled = true
+            }
+        } catch(err) {
+            console.log(err)
+        }
+
         function myFunction1() {
             // Declare variables 
             var filter, table, tr, td, i, txtValue;
             input1 = document.getElementById("myInput1");
             input2 = document.getElementById("myInput2");
+            
             input2.value = ""
 
             filter = input1.value.toUpperCase();
@@ -66,6 +83,7 @@
             var input, filter, table, tr, td, i, txtValue;
             input1 = document.getElementById("myInput1");
             input2 = document.getElementById("myInput2");
+            
             input1.value = ""
 
             filter = input2.value.toUpperCase();
