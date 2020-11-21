@@ -10,33 +10,32 @@
 
     <p>Please choose one of the following</p>
 
-    <form action="{% url 'save_location' %}" method="post">
+    <form action="{% url 'save_location' %}" method="post" id="myForm">
         {% csrf_token %}
         {{ form }}
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
             <tr>
-                <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Address</th>
                 <th scope="col">X-Coordinate</th>
                 <th scope="col">Y-Coordinate</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             {% for row in data %}
             <tr>
-                <td><input type="radio" name="choice" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}"></td>
                 <td>{{row.nameEN}}</td>
                 <td>{{row.addressEN}}</td>
                 <td>{{row.x}}</td>
                 <td>{{row.y}}</td>
+                <td><button name="choice" class="btn btn-dark" type="submit" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">Select</button></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <button class="btn"><a href="{% url 'search_location' %}">Back</a></button>
-    <button class="btn link-button" type="submit" value="Submit">Select Location</button>
     </form>
 
 {% endblock %}
