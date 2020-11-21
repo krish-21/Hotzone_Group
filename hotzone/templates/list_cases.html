@@ -43,7 +43,7 @@
                     <td>{{row.patient.idNumber}}</td>
                     <td>{{row.patient.name}}</td>
                     <td>{{row.virus}}</td>
-                    <td>{{row.dateConfirmed}}</td>
+                    <td>{{row.dateConfirmed|date:"d/m/Y" }}</td>
                     <td>{{row.caseType}}</td>
                 </tr>
                 {% endfor %}

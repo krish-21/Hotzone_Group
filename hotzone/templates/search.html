@@ -9,7 +9,7 @@
     <form action="{% url 'search_location' %}" method="post">
         {% csrf_token %}
         <div class="alert alert-info" role="alert">
-            You are searching location for case number {{case_pk}}
+            Case ID: {{case_pk}}
         </div>
         {% for field in form %}
             <div class="fieldWrapper form-group" aria-required="true">

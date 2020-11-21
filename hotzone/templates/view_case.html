@@ -29,7 +29,7 @@
                     {% for row in caseData %}
                     <tr>
                         <td>{{row.pk}}</td>
-                        <td>{{row.dateConfirmed}}</td>
+                        <td>{{row.dateConfirmed|date:"d/m/Y" }}</td>
                         <td>{{row.caseType}}</td>
                         </tr>
                     {% endfor %}
@@ -51,7 +51,7 @@
                     <tr>
                         <td>{{row.patient.name}}</td>
                         <td>{{row.patient.idNumber}}</td>
-                        <td>{{row.patient.dateOfBirth}}</td>
+                        <td>{{row.patient.dateOfBirth|date:"d/m/Y" }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -99,8 +99,8 @@
                 <td>{{row.location.address}}</td>
                 <td>{{row.location.x}}</td>
                 <td>{{row.location.y}}</td>
-                <td>{{row.dateFrom}}</td>
-                <td>{{row.dateTo}}</td>
+                <td>{{row.dateFrom|date:"d/m/Y" }}</td>
+                <td>{{row.dateTo|date:"d/m/Y" }}</td>
                 <td>{{row.category}}</td>
             </tr>
             {% endfor %}
