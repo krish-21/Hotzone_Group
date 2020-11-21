@@ -13,7 +13,7 @@
     <form action="{% url 'save_location' %}" method="post" id="myForm">
         {% csrf_token %}
         {{ form }}
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Name</th>
