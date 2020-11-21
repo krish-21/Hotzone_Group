@@ -298,7 +298,10 @@ def add_visit (request):
             except Exception as e:
                 return render(request, 'error.html', {'message': 'Cannot save visit'})
 
-            return render(request, 'add_visit_success.html', {'case_pk': case_pk})
+            caseData = Case.objects.filter(pk=case_pk)
+            visitData = Visit.objects.filter(case=case_pk)
+
+            return render(request, 'view_case.html', {'caseData': caseData, 'visitData': visitData, 'showMsg': True})
 
     # if a GET (or any other method) we'll create a blank Visit Form
     else:

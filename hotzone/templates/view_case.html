@@ -6,7 +6,12 @@
 
 {% block main %}
     <h2>Case Details</h2>
-
+    {% if showMsg %}
+    <br/>
+    <div class="alert alert-info" role="alert">
+        Successfully saved Visit data
+    </div>
+    {% endif %}
     <br/>
     
     <div class='row'>
