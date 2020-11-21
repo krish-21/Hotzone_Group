@@ -165,7 +165,6 @@ def save_location(request):
             l.save()
             request.session['location_pk'] = l.pk
         except Exception as e:
-            print("Exception: ")
             print(e)
 
     form = AddVisitForm()
@@ -277,8 +276,6 @@ def add_visit (request):
             location_pk = request.session['location_pk']
         except Exception as e:
             return render(request, 'error.html', {'message': 'No location selected'})
-
-        print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
 
         # create a form instance and populate it with data from the request:
         form = AddVisitForm(request.POST)
