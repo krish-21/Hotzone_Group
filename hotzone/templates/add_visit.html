@@ -5,30 +5,29 @@
 {% endblock %}
 
 {% block main %}
-    {% if user.is_authenticated %}
 
-        <h3>Visit Details</h3>
-        {% if wasPresent %}
-        <div class="alert alert-info" role="alert">
-            Location already exists in database.
-        </div>
-        {% else %}
-        <div class="alert alert-success" role="alert">
-            Successfully saved location in database. 
-        </div>
-        {% endif %}
-        <button class="btn"><a href="{% url 'search_location' %}">Change Location</a></button>
-        <br/>
-        <br/>
-        <form action="{% url 'add_visit' %}" method="POST">
-            {% csrf_token %}
-            {% for field in form %}
-                <div class="fieldWrapper form-group" aria-required="true">
-                    {{ field.label_tag }}
-                    {{ field }}
-                </div>
-            {% endfor %}
-            <button class="btn link-button" type="submit" value="Submit">Add Visit</button>
-        </form>
+    <h3>Visit Details</h3>
+    {% if wasPresent %}
+    <div class="alert alert-info" role="alert">
+        Location already exists in database.
+    </div>
+    {% else %}
+    <div class="alert alert-success" role="alert">
+        Successfully saved location in database. 
+    </div>
     {% endif %}
+    <button class="btn"><a href="{% url 'search_location' %}">Change Location</a></button>
+    <br/>
+    <br/>
+    <form action="{% url 'add_visit' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="fieldWrapper form-group" aria-required="true">
+                {{ field.label_tag }}
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button class="btn link-button" type="submit" value="Submit">Add Visit</button>
+    </form>
+
 {% endblock %}

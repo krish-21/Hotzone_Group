@@ -34,7 +34,11 @@ def login_view(request):
     
     # if a GET (or any other method) we'll redirect to login page
     else:
-        return render(request, 'login.html')
+        if not request.user.is_authenticated:
+            return render(request, 'login.html')
+        else:
+            #redirect to home if user is authenticated and try to access login page again
+            return HttpResponseRedirect(reverse('index'))
 
 
 # View for Logout Page
@@ -96,9 +100,15 @@ def search_location(request):
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         else:
+            # To guarantee user not breaking the logic if no case is selected before once logged in
+            try:
+                case_pk = request.session['case_pk']
+            except Exception as e:
+                return render(request, 'error.html', {'message': 'Insecure Action!'})
+            
+            # If user is authenticated, following the logic and selected a case before, action is permitted
             form = LocationForm()
-
-    return render(request, 'search.html', {'form': form})
+            return render(request, 'search.html', {'form': form})
 
 
 # Helper function to check if a Location already exists in database
@@ -160,24 +170,30 @@ def save_location(request):
 
 # View for List Locations Page
 def list_locations(request):
-    # Query the database to get all locations
-    data = Location.objects.order_by('name')
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {'message': 'Please login to access this page!'})
+    else:
+        # Query the database to get all locations
+        data = Location.objects.order_by('name')
 
-    return render(request, 'list_locations.html', {'data': data})
+        return render(request, 'list_locations.html', {'data': data})
 
 
 # View for List Cases Page
 def list_cases(request):
-    # Query the database to get all locations
-    data = Case.objects.all()
-    
-    # Serialize data to json
-    data_json = serializers.serialize('json', data)
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {'message': 'Please login to access this page!'})
+    else:
+        # Query the database to get all locations
+        data = Case.objects.all()
+        
+        # Serialize data to json
+        data_json = serializers.serialize('json', data)
 
-    # Save data to session variable
-    request.session['data'] = data_json
-    
-    return render(request, 'list_cases.html', {'data': data})
+        # Save data to session variable
+        request.session['data'] = data_json
+        
+        return render(request, 'list_cases.html', {'data': data})
 
 def view_case(request):
     # if this is a POST request we need to process the form data
@@ -202,6 +218,8 @@ def view_case(request):
     
     # if a GET (or any other method), use session variables for data
     else:
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
         try:
             # Get Location primary key from session variable
             pk = request.session['case_pk']
@@ -220,22 +238,21 @@ def view_case(request):
 
 # View for Add Visit Page
 def add_visit (request):
-    # Get Case Primary Key from session variable
-    try:
-        case_pk = request.session['case_pk']    
-    except Exception as e:
-        return render(request, 'error.html', {'message': 'No case selected'})
-
-    # Get Location Primary Key from session variable
-    try:
-        location_pk = request.session['location_pk']    
-    except Exception as e:
-        return render(request, 'error.html', {'message': 'No location selected'})
-    
-    print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
-
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        # Get Case Primary Key from session variable
+        try:
+            case_pk = request.session['case_pk']
+        except Exception as e:
+            return render(request, 'error.html', {'message': 'No case selected'})
+
+        # Get Location Primary Key from session variable
+        try:
+            location_pk = request.session['location_pk']
+        except Exception as e:
+            return render(request, 'error.html', {'message': 'No location selected'})
+
+        print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
+
         # create a form instance and populate it with data from the request:
         form = AddVisitForm(request.POST)
         # check whether it's valid:
@@ -261,6 +278,6 @@ def add_visit (request):
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         else:
-            form = AddVisitForm()
-        return render(request, 'add_visit.html', {'form': form})
+            # To guarantee user not breaking the logic if no case is selected before once logged in
+            return render(request, 'error.html', {'message': 'Insecure Action!'})
 
