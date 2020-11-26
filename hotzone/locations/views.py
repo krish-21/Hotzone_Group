@@ -312,3 +312,31 @@ def add_visit (request):
             # To guarantee user not breaking the logic if no case is selected before once logged in
             return render(request, 'error.html', {'message': 'Insecure Action!'})
 
+# View for clustering logic
+def clustering(request):
+    # POST request => user submit input value of D, T, C from a html form
+    if request.method == 'POST':
+        # check if user is authenticated in POST method
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+
+        # print value in console for local test only
+        print(request.POST['D'],request.POST['T'],request.POST['C'])
+
+        # @Tommy, you can add the logic of retreiving result here
+
+        # data pre-processing...
+        # clustering logic...
+        # clustering list result ready...
+
+        # need to return the clustering result
+        # the context is for test only
+        return render(request, 'cluster.html', {'clustering_result': {'some text for testing'}})
+
+    # GET request => user click the clustering button to input value of D, T, C
+    else:
+        # check if user is authenticated in GET method
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        return render(request, 'cluster.html')
+        

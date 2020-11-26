@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Clustering
+{% endblock %}
+
+{% block main %}
+    <h2>Clustering</h2>
+    <form method="post" action="{% url 'clustering' %}">
+        {% csrf_token %}
+        <div class="fieldWrapper form-group">
+            <label for="D_Field">Inter-location distance threshold </label>
+            <input type='text' class="form-control" name='D' placeholder="Input the value" id="D_Field" required></input>
+        </div>
+        <div class="fieldWrapper form-group">
+            <label for="T_Field">Proximity in time threshold </label>
+            <input type='text' class="form-control" name='T' placeholder="Input the value" id="T_Field" required></input>
+        </div>
+        <div class="fieldWrapper form-group">
+            <label for="C_Field">Minimum Cluster size </label>
+            <input type='text' class="form-control" name='C' placeholder="Input the value" id="C_Field" required></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br>
+
+    {% if clustering_result %}
+        <table class="table table-bordered table-hover" id="ResultTable">
+            <thead class='thead-dark'>
+                <tr>
+                    <th scope="col" class='align-middle'>Location Name</th>
+                    <th scope="col" class='align-middle'>X</th>
+                    <th scope="col" class='align-middle'>Y</th>
+                    <th scope="col" class='align-middle'>Date of Visit</th>
+                    <th scope="col" class='align-middle'>Case Number</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    {% endif %}
+
+    <button class="btn search"><a href="{% url 'index' %}">Back</a></button>
+
+{% endblock %}
