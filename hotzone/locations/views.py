@@ -317,11 +317,53 @@ def add_visit (request):
 
 # To convert date to days
 def convertDateToDays(d):
-    print("Date to Convert:", d)
+    #print("Date to Convert:", d)
     day = (d - datetime.date(2020,1,1)).days
     return day
 
-# View for clustering logic
+# clustering functions #1
+def custom_metric(q, p, space_eps, time_eps):
+    dist = 0
+    for i in range(2):
+        dist += (q[i] - p[i])**2
+    spatial_dist = math.sqrt(dist)
+
+    time_dist = math.sqrt((q[2]-p[2])**2)
+
+    if time_dist/time_eps <= 1 and spatial_dist/space_eps <= 1 and p[3] != q[3]:
+        return 1
+    else:
+        return 2
+
+# clustering function #2
+def cluster(vector_4d, distance, time, minimum_cluster):
+
+    params = {"space_eps": distance, "time_eps": time}
+    db = DBSCAN(eps=1, min_samples=minimum_cluster-1, metric=custom_metric, metric_params=params).fit_predict(vector_4d)
+
+    unique_labels = set(db)
+    total_clusters = len(unique_labels) if -1 not in unique_labels else len(unique_labels) -1
+
+    print("Total clusters:", total_clusters)
+
+    total_noise = list(db).count(-1)
+
+    print("Total un-clustered:", total_noise)
+
+    for k in unique_labels:
+        if k != -1:
+
+            labels_k = db == k
+            cluster_k = vector_4d[labels_k]
+
+            print("Cluster", k, " size:", len(cluster_k))
+
+            for pt in cluster_k:
+                print("(x:{}, y:{}, day:{}, caseNo:{})".format(pt[0], pt[1], pt[2], pt[3]))
+
+            print()
+
+# View for clustering 
 def clustering(request):
     # POST request => user submit input value of D, T, C from a html form
     if request.method == 'POST':
@@ -329,13 +371,10 @@ def clustering(request):
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
 
-        # retreiving result here, add default value in case no value is provided in the form
+        # retreiving choices
         D = int(request.POST['D'])
         T = int(request.POST['T'])
         C = int(request.POST['C'])
-
-        # print value in console for local test only
-        print('distance: {}, time: {}, min_cluster: {}'.format(D, T, C))
 
         # data pre-processing...
         data = []
@@ -344,17 +383,19 @@ def clustering(request):
             if visit.category=='Visit' and visit.dateFrom==visit.dateTo:
                 X = visit.location.x
                 Y = visit.location.y
-                day = convertDateToDays(visit.dateFrom)
+                days = convertDateToDays(visit.dateFrom)
                 caseNo = visit.case.pk
-                data.append([X, Y, day, caseNo])
-                print(X, Y, day, caseNo)
-        v4 = np.array(data)
-        print(v4, D, T, C)
-        # clustering logic...
-        # clustering list result ready...
+                data.append([X, Y, days, caseNo])
+                #print(X, Y, days, caseNo)
+        preparedData = np.array(data)
+        #print(preparedData, D, T, C)
 
+        # perform clustering .
+        cluster(preparedData, D, T, C)
 
-        # need to return the clustering result
+        # @Krishna:
+        # Format/return the output from cluster() as required
+
         # the context is for test only
         sample_clustering_result = {'location': 'testLocation', 'x': '55', 'y': '55', 'visit_date': '2020-01-01', 'result_no': '777'}
         return render(request, 'cluster.html', {'clustering_result': sample_clustering_result})
