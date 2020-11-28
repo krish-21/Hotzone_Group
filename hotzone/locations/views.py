@@ -5,7 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 
 import requests
+import datetime
 import json
+import numpy as np
+from sklearn.cluster import DBSCAN
 
 from django.views.generic import TemplateView
 
@@ -312,6 +315,12 @@ def add_visit (request):
             # To guarantee user not breaking the logic if no case is selected before once logged in
             return render(request, 'error.html', {'message': 'Insecure Action!'})
 
+# To convert date to days
+def convertDateToDays(d):
+    print("Date to Convert:", d)
+    day = (d - datetime.date(2020,1,1)).days
+    return day
+
 # View for clustering logic
 def clustering(request):
     # POST request => user submit input value of D, T, C from a html form
@@ -321,15 +330,26 @@ def clustering(request):
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
 
         # retreiving result here, add default value in case no value is provided in the form
-        D = request.POST['D'] or 200
-        T = request.POST['T'] or 3
-        C = request.POST['C'] or 2
+        D = int(request.POST['D'])
+        T = int(request.POST['T'])
+        C = int(request.POST['C'])
 
         # print value in console for local test only
         print('distance: {}, time: {}, min_cluster: {}'.format(D, T, C))
 
-
         # data pre-processing...
+        data = []
+        visitData = Visit.objects.all()
+        for visit in visitData:
+            if visit.category=='Visit' and visit.dateFrom==visit.dateTo:
+                X = visit.location.x
+                Y = visit.location.y
+                day = convertDateToDays(visit.dateFrom)
+                caseNo = visit.case.pk
+                data.append([X, Y, day, caseNo])
+                print(X, Y, day, caseNo)
+        v4 = np.array(data)
+        print(v4, D, T, C)
         # clustering logic...
         # clustering list result ready...
 

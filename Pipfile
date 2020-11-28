@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 django = "~=3.1.2"
+numpy = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
