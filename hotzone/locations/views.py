@@ -7,6 +7,7 @@ from django.core import serializers
 import requests
 import datetime
 import json
+import math
 import numpy as np
 from sklearn.cluster import DBSCAN
 
@@ -365,6 +366,13 @@ def cluster(vector_4d, distance, time, minimum_cluster):
 
 # View for clustering 
 def clustering(request):
+
+    # Since it gets annoying to keep re-entering values into the form,
+    # I'm returning D, T & C as contexts so the form is auto-filled.
+    # If it's a GET request, the default values are returned.
+    # If it's a POST request, the values the user entered are returned. 
+    # - Bevan
+
     # POST request => user submit input value of D, T, C from a html form
     if request.method == 'POST':
         # check if user is authenticated in POST method
@@ -396,14 +404,14 @@ def clustering(request):
         # @Krishna:
         # Format/return the output from cluster() as required
 
-        # the context is for test only
+        # the context is for test only (by Tommy)
         sample_clustering_result = {'location': 'testLocation', 'x': '55', 'y': '55', 'visit_date': '2020-01-01', 'result_no': '777'}
-        return render(request, 'cluster.html', {'clustering_result': sample_clustering_result})
+        return render(request, 'cluster.html', {'clustering_result': sample_clustering_result, 'D': D, 'T': T, 'C': C})
 
     # GET request => user click the clustering button to input value of D, T, C
     else:
         # check if user is authenticated in GET method
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
-        return render(request, 'cluster.html')
+        return render(request, 'cluster.html', {'D': 200, 'T': 3, 'C': 2})
         

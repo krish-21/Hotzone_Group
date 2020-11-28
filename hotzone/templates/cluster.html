@@ -6,23 +6,24 @@
 
 {% block main %}
     <h2>Clustering</h2>
+    <br/>
     <form method="post" action="{% url 'clustering' %}">
         {% csrf_token %}
         <div class="fieldWrapper form-group">
-            <label for="D_Field">Inter-location distance threshold </label>
-            <input type='text' class="form-control" name='D' placeholder="Input the value" id="D_Field" required></input>
+            <label for="D_Field">Inter-location Distance Threshold (<strong>D</strong>):</label>
+            <input type='text' class="form-control" name='D' placeholder="Enter a number" id="D_Field" value="{{D}}" required></input>
         </div>
         <div class="fieldWrapper form-group">
-            <label for="T_Field">Proximity in time threshold </label>
-            <input type='text' class="form-control" name='T' placeholder="Input the value" id="T_Field" required></input>
+            <label for="T_Field">Proximity in Time Threshold (<strong>T</strong>):</label>
+            <input type='text' class="form-control" name='T' placeholder="Enter a number" id="T_Field" value="{{T}}" required></input>
         </div>
         <div class="fieldWrapper form-group">
-            <label for="C_Field">Minimum Cluster size </label>
-            <input type='text' class="form-control" name='C' placeholder="Input the value" id="C_Field" required></input>
+            <label for="C_Field">Minimum Cluster Size (<strong>C</strong>):</label>
+            <input type='text' class="form-control" name='C' placeholder="Enter a number" id="C_Field" value="{{C}}" required></input>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-    <br>
+    <br/>
 
     {% if clustering_result %}
         <table class="table table-bordered table-hover" id="ResultTable">
