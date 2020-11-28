@@ -320,18 +320,24 @@ def clustering(request):
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
 
-        # print value in console for local test only
-        print(request.POST['D'],request.POST['T'],request.POST['C'])
+        # retreiving result here, add default value in case no value is provided in the form
+        D = request.POST['D'] or 200
+        T = request.POST['T'] or 3
+        C = request.POST['C'] or 2
 
-        # @Tommy, you can add the logic of retreiving result here
+        # print value in console for local test only
+        print('distance: {}, time: {}, min_cluster: {}'.format(D, T, C))
+
 
         # data pre-processing...
         # clustering logic...
         # clustering list result ready...
 
+
         # need to return the clustering result
         # the context is for test only
-        return render(request, 'cluster.html', {'clustering_result': {'some text for testing'}})
+        sample_clustering_result = {'location': 'testLocation', 'x': '55', 'y': '55', 'visit_date': '2020-01-01', 'result_no': '777'}
+        return render(request, 'cluster.html', {'clustering_result': sample_clustering_result})
 
     # GET request => user click the clustering button to input value of D, T, C
     else:
