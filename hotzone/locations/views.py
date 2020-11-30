@@ -319,6 +319,11 @@ def convertDateToDays(d):
     day = (d - datetime.date(2020,1,1)).days
     return day
 
+# To convert days to date
+def convertDaysToDate(d):
+    ans = datetime.date(2020,1,1) + datetime.timedelta(days=d)
+    return ans.strftime("%d/%m/%Y")
+
 # clustering functions #1
 def custom_metric(q, p, space_eps, time_eps):
     dist = 0
@@ -357,7 +362,7 @@ def cluster(vector_4d, distance, time, minimum_cluster):
             print("Cluster", k, " size:", len(cluster_k))
 
             for pt in cluster_k:
-                print("(x:{}, y:{}, day:{}, caseNo:{})".format(pt[0], pt[1], pt[2], pt[3]))
+                print("(x:{}, y:{}, date:{}, caseNo:{})".format(pt[0], pt[1], convertDaysToDate(pt[2]), pt[3]))
 
             print()
 
