@@ -91,7 +91,6 @@ def search_location(request):
 
             # Make the API call
             code, data = get_location_api(name)
-            locationsInDb, locationsNotInDb = split_data(data)
 
             # redirect to a new URL:
             # if no data returned, return GeoLocation Error
@@ -101,6 +100,7 @@ def search_location(request):
             
             # if location call successful, save data as session variable & render results
             else:
+                locationsInDb, locationsNotInDb = split_data(data)
                 request.session['dataindb'] = locationsInDb
                 request.session['datanotindb'] = locationsNotInDb
                 return render(request, 'location_results.html', {'dataindb': locationsInDb, 'datanotindb': locationsNotInDb})
@@ -174,11 +174,6 @@ def save_location(request):
         else:
             table = 0
 
-
-    if(table==0):
-        counter=choice1
-    else:
-        counter=choice2
     
 
     # Select information from session variable
