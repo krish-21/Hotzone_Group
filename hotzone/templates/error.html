@@ -6,7 +6,11 @@
 
 {% block main %}
     <div class="alert alert-danger" role="alert">
-        {{message}}
+        {% if back %}
+            Error 400: Bad Reqest! Please try another location.
+        {% else %}    
+            {{message}}
+        {% endif %}
     </div>
     {% if user.is_authenticated %}
         {% if back %}
