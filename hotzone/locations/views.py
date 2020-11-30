@@ -206,7 +206,6 @@ def save_location(request):
             l.save()
             request.session['location_pk'] = l.pk
         except Exception as e:
-            print("Exception: ")
             print(e)
 
     form = AddVisitForm()
@@ -320,8 +319,6 @@ def add_visit (request):
         except Exception as e:
             return render(request, 'error.html', {'message': 'No location selected'})
 
-        print("case_pk: " + str(case_pk) + " location_pk: " + str(location_pk))
-
         # create a form instance and populate it with data from the request:
         form = AddVisitForm(request.POST)
         # check whether it's valid:
@@ -359,6 +356,11 @@ def convertDateToDays(d):
     #print("Date to Convert:", d)
     day = (d - datetime.date(2020,1,1)).days
     return day
+
+# To convert days to date
+def convertDaysToDate(d):
+    ans = datetime.date(2020,1,1) + datetime.timedelta(days=d)
+    return ans.strftime("%d/%m/%Y")
 
 # clustering functions #1
 def custom_metric(q, p, space_eps, time_eps):
@@ -398,7 +400,7 @@ def cluster(vector_4d, distance, time, minimum_cluster):
             print("Cluster", k, " size:", len(cluster_k))
 
             for pt in cluster_k:
-                print("(x:{}, y:{}, day:{}, caseNo:{})".format(pt[0], pt[1], pt[2], pt[3]))
+                print("(x:{}, y:{}, date:{}, caseNo:{})".format(pt[0], pt[1], convertDaysToDate(pt[2]), pt[3]))
 
             print()
 
