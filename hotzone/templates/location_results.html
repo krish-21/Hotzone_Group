@@ -6,11 +6,11 @@
 
 {% block main %}
 
-
     <h2>Location Results</h2>
-    <p>Please choose one of the following</p>
+    {% if dataindb %}
+    <p>Please choose a location from the results below.</p>
 
-    <h5 style='text-align:left'>Locations present in HotZone Database -</h5>
+    <h4 style='text-align:left'>HotZone Results:</h4>
     <form action="{% url 'save_location' %}" method="post" id="myForm">
         {% csrf_token %}
         {{ form }}
@@ -19,8 +19,8 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Address</th>
-                <th scope="col">X-Coordinate</th>
-                <th scope="col">Y-Coordinate</th>
+                <th scope="col">X Coordinate</th>
+                <th scope="col">Y Coordinate</th>
                 <th></th>
             </tr>
         </thead>
@@ -37,8 +37,11 @@
         </tbody>
     </table>
     </form>
+    {% else %}
+    <br/><div class="alert alert-danger" role="alert">No such locations known to HotZone. Please select a result from the GeoData Store instead.</div><br/>
+    {% endif %}
 
-    <h5 style='text-align:left'>GeoData Results -</h5>
+    <h4 style='text-align:left'>GeoData Store Results:</h4>
     <form action="{% url 'save_location' %}" method="post" id="myForm">
         {% csrf_token %}
         {{ form }}
@@ -47,8 +50,8 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Address</th>
-                <th scope="col">X-Coordinate</th>
-                <th scope="col">Y-Coordinate</th>
+                <th scope="col">X Coordinate</th>
+                <th scope="col">Y Coordinate</th>
                 <th></th>
             </tr>
         </thead>

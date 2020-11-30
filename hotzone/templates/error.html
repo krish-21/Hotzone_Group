@@ -9,7 +9,10 @@
         {{message}}
     </div>
     {% if user.is_authenticated %}
-        <button class="btn search"><a href="{% url 'index' %}">Go Home</a></button>
+        {% if back %}
+        <button class="btn search"><a href="javascript:history.go(-1)">Back</a></button>
+        {% endif %}
+        <button class="btn search"><a href="{% url 'index' %}">Home</a></button>
     {% else %}
         <button class="btn search"><a href="{% url 'login' %}">Return to Login page</a></button>
     {% endif %}

@@ -96,7 +96,7 @@ def search_location(request):
             # if no data returned, return GeoLocation Error
             if data == None:
                 message = "Error 400: Bad Request. Please try again!" if code == 400 else "Error 500: Internal Server Error. Please try again!"
-                return render(request, 'error.html', {'message': message})
+                return render(request, 'error.html', {'message': message, 'back': True})
             
             # if location call successful, save data as session variable & render results
             else:
