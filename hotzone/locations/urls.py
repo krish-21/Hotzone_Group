@@ -1,7 +1,7 @@
 from django.urls import path
 
 from locations import views
-from .views import login_view, logout_view, HomePage, search_location, save_location, list_locations, list_cases, view_case, add_visit, clustering
+from .views import login_view, logout_view, HomePage, search_location, save_location, list_locations, list_cases, view_case, add_visit
 
 urlpatterns = [
     path('', 
@@ -31,7 +31,4 @@ urlpatterns = [
     path('add_visit',
         add_visit,
         name='add_visit'),
-    path('clustering', 
-        clustering, 
-        name='clustering')
 ]

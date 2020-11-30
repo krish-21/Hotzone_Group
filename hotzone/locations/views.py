@@ -5,11 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 
 import requests
-import datetime
 import json
-import math
-import numpy as np
-from sklearn.cluster import DBSCAN
 
 from django.views.generic import TemplateView
 
@@ -313,102 +309,3 @@ def add_visit (request):
             # To guarantee user not breaking the logic if no case is selected before once logged in
             return render(request, 'error.html', {'message': 'Insecure Action!'})
 
-# To convert date to days
-def convertDateToDays(d):
-    #print("Date to Convert:", d)
-    day = (d - datetime.date(2020,1,1)).days
-    return day
-
-# clustering functions #1
-def custom_metric(q, p, space_eps, time_eps):
-    dist = 0
-    for i in range(2):
-        dist += (q[i] - p[i])**2
-    spatial_dist = math.sqrt(dist)
-
-    time_dist = math.sqrt((q[2]-p[2])**2)
-
-    if time_dist/time_eps <= 1 and spatial_dist/space_eps <= 1 and p[3] != q[3]:
-        return 1
-    else:
-        return 2
-
-# clustering function #2
-def cluster(vector_4d, distance, time, minimum_cluster):
-
-    params = {"space_eps": distance, "time_eps": time}
-    db = DBSCAN(eps=1, min_samples=minimum_cluster-1, metric=custom_metric, metric_params=params).fit_predict(vector_4d)
-
-    unique_labels = set(db)
-    total_clusters = len(unique_labels) if -1 not in unique_labels else len(unique_labels) -1
-
-    print("Total clusters:", total_clusters)
-
-    total_noise = list(db).count(-1)
-
-    print("Total un-clustered:", total_noise)
-
-    for k in unique_labels:
-        if k != -1:
-
-            labels_k = db == k
-            cluster_k = vector_4d[labels_k]
-
-            print("Cluster", k, " size:", len(cluster_k))
-
-            for pt in cluster_k:
-                print("(x:{}, y:{}, day:{}, caseNo:{})".format(pt[0], pt[1], pt[2], pt[3]))
-
-            print()
-
-# View for clustering 
-def clustering(request):
-
-    # Since it gets annoying to keep re-entering values into the form,
-    # I'm returning D, T & C as contexts so the form is auto-filled.
-    # If it's a GET request, the default values are returned.
-    # If it's a POST request, the values the user entered are returned. 
-    # - Bevan
-
-    # POST request => user submit input value of D, T, C from a html form
-    if request.method == 'POST':
-        # check if user is authenticated in POST method
-        if not request.user.is_authenticated:
-            return render(request, 'error.html', {'message': 'Please login to access this page!'})
-
-        # retreiving choices
-        D = int(request.POST['D'])
-        T = int(request.POST['T'])
-        C = int(request.POST['C'])
-
-        # data pre-processing...
-        data = []
-        visitData = Visit.objects.all()
-        for visit in visitData:
-            if visit.category=='Visit' and visit.dateFrom==visit.dateTo:
-                X = visit.location.x
-                Y = visit.location.y
-                days = convertDateToDays(visit.dateFrom)
-                caseNo = visit.case.pk
-                data.append([X, Y, days, caseNo])
-                #print(X, Y, days, caseNo)
-        preparedData = np.array(data)
-        #print(preparedData, D, T, C)
-
-        # perform clustering .
-        cluster(preparedData, D, T, C)
-
-        # @Krishna:
-        # Format/return the output from cluster() as required
-
-        # the context is for test only (by Tommy)
-        sample_clustering_result = {'location': 'testLocation', 'x': '55', 'y': '55', 'visit_date': '2020-01-01', 'result_no': '777'}
-        return render(request, 'cluster.html', {'clustering_result': sample_clustering_result, 'D': D, 'T': T, 'C': C})
-
-    # GET request => user click the clustering button to input value of D, T, C
-    else:
-        # check if user is authenticated in GET method
-        if not request.user.is_authenticated:
-            return render(request, 'error.html', {'message': 'Please login to access this page!'})
-        return render(request, 'cluster.html', {'D': 200, 'T': 3, 'C': 2})
-        
