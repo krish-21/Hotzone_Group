@@ -8,6 +8,7 @@
     {% if user.is_authenticated %}
         <button class="btn view"><a href="{% url 'list_location' %}">View Locations</a></button>
         <button class="btn view"><a href="{% url 'list_cases' %}">View Cases</a></button>
+        <button class="btn view"><a href="{% url 'clustering' %}">Clustering</a></button>
     {% else %}
     <div class="alert alert-danger" role="alert">
         Please login to access this page!

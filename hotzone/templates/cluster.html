@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Clustering
+{% endblock %}
+
+{% block main %}
+    <h2>Clustering</h2>
+    <br/>
+    <form method="post" action="{% url 'clustering' %}">
+        {% csrf_token %}
+        <div class="fieldWrapper form-group">
+            <label for="D_Field">Inter-location Distance Threshold (<strong>D</strong>):</label>
+            <input type='text' class="form-control" name='D' placeholder="Enter a number" id="D_Field" value="{{D}}" required></input>
+        </div>
+        <div class="fieldWrapper form-group">
+            <label for="T_Field">Proximity in Time Threshold (<strong>T</strong>):</label>
+            <input type='text' class="form-control" name='T' placeholder="Enter a number" id="T_Field" value="{{T}}" required></input>
+        </div>
+        <div class="fieldWrapper form-group">
+            <label for="C_Field">Minimum Cluster Size (<strong>C</strong>):</label>
+            <input type='text' class="form-control" name='C' placeholder="Enter a number" id="C_Field" value="{{C}}" required></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+
+    {% if clustering_result %}
+        <table class="table table-bordered table-hover" id="ResultTable">
+            <thead class='thead-dark'>
+                <tr>
+                    <th scope="col" class='align-middle'>Location Name</th>
+                    <th scope="col" class='align-middle'>X</th>
+                    <th scope="col" class='align-middle'>Y</th>
+                    <th scope="col" class='align-middle'>Date of Visit</th>
+                    <th scope="col" class='align-middle'>Case Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ clustering_result.location }}</td>
+                    <td>{{ clustering_result.x }}</td>
+                    <td>{{ clustering_result.y }}</td>
+                    <td>{{ clustering_result.visit_date }}</td>
+                    <td>{{ clustering_result.result_no }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
+    <button class="btn search"><a href="{% url 'index' %}">Back</a></button>
+
+{% endblock %}
