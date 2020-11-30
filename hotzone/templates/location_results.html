@@ -6,10 +6,11 @@
 
 {% block main %}
 
-    <h2>Location Results</h2>
 
+    <h2>Location Results</h2>
     <p>Please choose one of the following</p>
 
+    <h5 style='text-align:left'>Locations present in HotZone Database -</h5>
     <form action="{% url 'save_location' %}" method="post" id="myForm">
         {% csrf_token %}
         {{ form }}
@@ -24,13 +25,41 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in data %}
+            {% for row in dataindb %}
             <tr>
                 <td>{{row.nameEN}}</td>
                 <td>{{row.addressEN}}</td>
                 <td>{{row.x}}</td>
                 <td>{{row.y}}</td>
-                <td><button name="choice" class="btn btn-dark" type="submit" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">Select</button></td>
+                <td><button name="choice1" class="btn btn-dark" type="submit" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">Select</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </form>
+
+    <h5 style='text-align:left'>GeoData Results -</h5>
+    <form action="{% url 'save_location' %}" method="post" id="myForm">
+        {% csrf_token %}
+        {{ form }}
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">X-Coordinate</th>
+                <th scope="col">Y-Coordinate</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in datanotindb %}
+            <tr>
+                <td>{{row.nameEN}}</td>
+                <td>{{row.addressEN}}</td>
+                <td>{{row.x}}</td>
+                <td>{{row.y}}</td>
+                <td><button name="choice2" class="btn btn-dark" type="submit" id="choice{{ forloop.counter0 }}" value="{{ forloop.counter0 }}">Select</button></td>
             </tr>
             {% endfor %}
         </tbody>

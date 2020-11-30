@@ -91,7 +91,8 @@ def search_location(request):
 
             # Make the API call
             code, data = get_location_api(name)
-                        
+            locationsInDb, locationsNotInDb = split_data(data)
+
             # redirect to a new URL:
             # if no data returned, return GeoLocation Error
             if data == None:
@@ -100,8 +101,9 @@ def search_location(request):
             
             # if location call successful, save data as session variable & render results
             else:
-                request.session['data'] = data
-                return render(request, 'location_results.html', {'data': data})
+                request.session['dataindb'] = locationsInDb
+                request.session['datanotindb'] = locationsNotInDb
+                return render(request, 'location_results.html', {'dataindb': locationsInDb, 'datanotindb': locationsNotInDb})
             
     # if a GET (or any other method) we'll create a blank  Location Form
     else:
@@ -139,21 +141,56 @@ def check_location_in_DB(data):
     else:
         return False, None
 
+def split_data(data):
+    locationsInDb=[]
+    locationsNotInDb=[]
+    for i in data:
+        check, l = check_location_in_DB(i)
+        if(check==True):
+            locationsInDb.append(i)
+        else:
+            locationsNotInDb.append(i)
+    return locationsInDb, locationsNotInDb
 
-# View for Save Location Page
+
+
 def save_location(request):
-    # Extract information from request
+
+    table = 0
+
     try:
-        choice = request.POST.__getitem__('choice')
+        choice1 = request.POST.__getitem__('choice1')
     except Exception as e:
         if not request.user.is_authenticated:
             return render(request, 'error.html', {'message': 'Please login to access this page!'})
         else:
-            return render(request, 'error.html', {'message': 'No location selected'})
+            table = 1
+                
+    try:
+        choice2 = request.POST.__getitem__('choice2')
+    except Exception as e:
+        if not request.user.is_authenticated:
+            return render(request, 'error.html', {'message': 'Please login to access this page!'})
+        else:
+            table = 0
+
+
+    if(table==0):
+        counter=choice1
+    else:
+        counter=choice2
+    
 
     # Select information from session variable
-    data = request.session['data'][int(choice)]
-    
+    try:
+        if(table==0):
+            data = request.session['dataindb'][int(choice1)]
+        else:
+            data = request.session['datanotindb'][int(choice2)]   
+    except Exception as e:
+        print(e)
+
+
     # Query the existing Location database
     chk, location_pk = check_location_in_DB(data)
 
@@ -175,6 +212,7 @@ def save_location(request):
     form = AddVisitForm()
     
     return render(request, 'add_visit.html', {'form': form, 'wasPresent': chk})
+
 
 
 # View for List Locations Page
