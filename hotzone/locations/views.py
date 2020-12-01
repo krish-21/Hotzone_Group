@@ -434,10 +434,6 @@ def clustering(request):
         data = []
         visitData = Visit.objects.all()
 
-        # if visit record or case record query result is empty
-        if not visitData or not Case.objects.all():
-            return render(request, 'error.html', {'message': 'Insufficient data to perform clustering!'})
-
         for visit in visitData:
             if visit.category=='Visit' and visit.dateFrom==visit.dateTo:
                 X = visit.location.x
@@ -446,6 +442,10 @@ def clustering(request):
                 caseNo = visit.case.pk
                 data.append([X, Y, days, caseNo])
                 #print(X, Y, days, caseNo)
+
+        # if query result is empty
+        if not data:
+            return render(request, 'error.html', {'message': 'Insufficient data to perform clustering!'})
         preparedData = np.array(data)
         #print(preparedData, D, T, C)
 
