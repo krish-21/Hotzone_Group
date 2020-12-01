@@ -445,14 +445,31 @@ def clustering(request):
         #print(preparedData, D, T, C)
 
         # perform clustering .
-        cluster(preparedData, D, T, C)
+        clustering_result = cluster(preparedData, D, T, C)
+        
+        # extract number of clusters
+        clusters_num = int(clustering_result['totalClustered'])
+        
+        clusters = []
+        # for each cluster
+        for i in range(clusters_num):
+            # for each record in a cluster
+            for j in range(len(clustering_result[i])):
+                # get the location name from db using x & y
+                temp_location = Location.objects.filter(x=clustering_result[i][j]['x'], y=clustering_result[i][j]['y']).values('name')
+                # print(temp_location)
+                for loc in temp_location:
+                    location_name = loc['name']
+                # add the location into the data
+                clustering_result[i][j]['location'] = location_name
+            # separate cluster data separately
+            clusters.append(clustering_result[i])
+            
+        print()
+        print(clusters)
+        print()
 
-        # @Krishna:
-        # Format/return the output from cluster() as required
-
-        # the context is for test only (by Tommy)
-        sample_clustering_result = {'location': 'testLocation', 'x': '55', 'y': '55', 'visit_date': '2020-01-01', 'result_no': '777'}
-        return render(request, 'cluster.html', {'clustering_result': sample_clustering_result, 'D': D, 'T': T, 'C': C})
+        return render(request, 'cluster.html', {'clusters': clusters, 'D': D, 'T': T, 'C': C})
 
     # GET request => user click the clustering button to input value of D, T, C
     else:

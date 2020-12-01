@@ -25,7 +25,9 @@
     </form>
     <br/>
 
-    {% if clustering_result %}
+
+    {% for cluster in clusters %}
+        <h4 class='text-center'>Cluster {{ forloop.counter }}</h4>
         <table class="table table-bordered table-hover" id="ResultTable">
             <thead class='thead-dark'>
                 <tr>
@@ -37,16 +39,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>{{ clustering_result.location }}</td>
-                    <td>{{ clustering_result.x }}</td>
-                    <td>{{ clustering_result.y }}</td>
-                    <td>{{ clustering_result.visit_date }}</td>
-                    <td>{{ clustering_result.result_no }}</td>
-                </tr>
+                {% for row in cluster %}
+                    <tr>
+                        <td>{{row.location}}</td>
+                        <td>{{row.x}}</td>
+                        <td>{{row.y}}</td>
+                        <td>{{row.date}}</td>
+                        <td>{{row.caseNo}}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
-    {% endif %}
+    {% endfor %}
+
 
     <button class="btn search"><a href="{% url 'index' %}">Back</a></button>
 
