@@ -31,7 +31,7 @@ class Patient(models.Model):
 class Virus(models.Model):
     name = models.CharField(max_length=30)
     commonName = models.CharField(max_length=50)
-    maxInfectiousPeriod = models.CharField(max_length=3)
+    maxInfectiousPeriod = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
