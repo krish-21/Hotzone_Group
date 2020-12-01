@@ -16,8 +16,6 @@ from django.views.generic import TemplateView
 from .forms import LocationForm, AddVisitForm
 from .models import Location, Case, Patient, Visit
 
-# Create your views here.
-
 # View for Login Page
 def login_view(request):
     # if this is a POST request we need to process the form data
@@ -72,7 +70,7 @@ def get_location_api(name):
         return r.status_code, None
 
 
-# View for Seacrh Locations Page
+# View for Search Locations Page
 def search_location(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -141,6 +139,7 @@ def check_location_in_DB(data):
     else:
         return False, None
 
+# Helper function to separate HZ and GD results
 def split_data(data):
     locationsInDb=[]
     locationsNotInDb=[]
@@ -152,8 +151,7 @@ def split_data(data):
             locationsNotInDb.append(i)
     return locationsInDb, locationsNotInDb
 
-
-
+# To save a location to HZ
 def save_location(request):
 
     table = 0
@@ -249,6 +247,7 @@ def list_cases(request):
         
         return render(request, 'list_cases.html', {'data': data, 'empty': False})
 
+# View details about a Case
 def view_case(request):
     # if this is a POST request we need to process the form data
     if request.method=='POST':
@@ -357,7 +356,7 @@ def convertDaysToDate(d):
     ans = datetime.date(2020,1,1) + datetime.timedelta(days=d)
     return ans.strftime("%d/%m/%Y")
 
-# clustering functions #1
+# clustering function #1
 def custom_metric(q, p, space_eps, time_eps):
     dist = 0
     for i in range(2):
@@ -413,13 +412,10 @@ def cluster(vector_4d, distance, time, minimum_cluster):
 # View for clustering 
 def clustering(request):
 
-    # Since it gets annoying to keep re-entering values into the form,
-    # I'm returning D, T & C as contexts so the form is auto-filled.
     # If it's a GET request, the default values are returned.
     # If it's a POST request, the values the user entered are returned. 
-    # - Bevan
 
-    # POST request => user submit input value of D, T, C from a html form
+    # POST request => user submit input values of D, T, C
     if request.method == 'POST':
         # check if user is authenticated in POST method
         if not request.user.is_authenticated:
@@ -445,11 +441,9 @@ def clustering(request):
                 days = convertDateToDays(visit.dateFrom)
                 caseNo = visit.case.pk
                 data.append([X, Y, days, caseNo])
-                #print(X, Y, days, caseNo)
         preparedData = np.array(data)
-        #print(preparedData, D, T, C)
 
-        # perform clustering .
+        # perform clustering 
         clustering_result = cluster(preparedData, D, T, C)
         
         # extract number of clusters
