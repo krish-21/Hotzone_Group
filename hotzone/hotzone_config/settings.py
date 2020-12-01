@@ -29,7 +29,7 @@ SECRET_KEY = env('HOTZONE_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', 'immense-citadel-19865.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', 'salty-chamber-16869.herokuapp.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
