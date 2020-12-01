@@ -469,7 +469,7 @@ def clustering(request):
         print(clusters)
         print()
 
-        return render(request, 'cluster.html', {'clusters': clusters, 'D': D, 'T': T, 'C': C})
+        return render(request, 'cluster.html', {'clusters': clusters, 'D': D, 'T': T, 'C': C, 'method': request.method})
 
     # GET request => user click the clustering button to input value of D, T, C
     else:

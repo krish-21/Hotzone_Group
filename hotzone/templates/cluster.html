@@ -51,9 +51,11 @@
             </tbody>
         </table>
     {% empty %}
-        <div class="alert alert-danger" role="alert">
-            No clusters identified with the given settings.
-        </div>
+        {% if method == 'POST' %}
+            <div class="alert alert-danger" role="alert">
+                No clusters identified with the given settings.
+            </div>
+        {% endif %}
     {% endfor %}
 
 
