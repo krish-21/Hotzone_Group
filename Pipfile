@@ -7,6 +7,10 @@ name = "pypi"
 django = "~=3.1.2"
 numpy = "*"
 scikit-learn = "*"
+gunicorn = "*"
+whitenoise = "*"
+psycopg2-binary = "*"
+environs = {extras = ["django"], version = "*"}
 
 [dev-packages]
 
