@@ -441,6 +441,12 @@ def clustering(request):
                 days = convertDateToDays(visit.dateFrom)
                 caseNo = visit.case.pk
                 data.append([X, Y, days, caseNo])
+
+
+        # if query result is empty
+        if not data:
+            return render(request, 'error.html', {'message': 'Insufficient data to perform clustering!'})
+            
         preparedData = np.array(data)
 
         # perform clustering 
