@@ -433,6 +433,11 @@ def clustering(request):
         # data pre-processing...
         data = []
         visitData = Visit.objects.all()
+
+        # if visit record or case record query result is empty
+        if not visitData or not Case.objects.all():
+            return render(request, 'error.html', {'message': 'Insufficient data to perform clustering!'})
+
         for visit in visitData:
             if visit.category=='Visit' and visit.dateFrom==visit.dateTo:
                 X = visit.location.x
