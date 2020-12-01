@@ -50,6 +50,10 @@
                 {% endfor %}
             </tbody>
         </table>
+    {% empty %}
+        <div class="alert alert-danger" role="alert">
+            No clusters identified with the given settings.
+        </div>
     {% endfor %}
 
 
