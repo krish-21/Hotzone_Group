@@ -28,9 +28,11 @@
 
     {% for cluster in clusters %}
         <h4 class='text-center'>Cluster {{ forloop.counter }}</h4>
+        <p>[ Size: {{ cluster|length }} ]</p>
         <table class="table table-bordered table-hover" id="ResultTable">
             <thead class='thead-dark'>
                 <tr>
+                    <th scope="col" class='align-middle'>S.No</th>
                     <th scope="col" class='align-middle'>Location Name</th>
                     <th scope="col" class='align-middle'>X</th>
                     <th scope="col" class='align-middle'>Y</th>
@@ -41,11 +43,12 @@
             <tbody>
                 {% for row in cluster %}
                     <tr>
-                        <td>{{row.location}}</td>
-                        <td>{{row.x}}</td>
-                        <td>{{row.y}}</td>
-                        <td>{{row.date}}</td>
-                        <td>{{row.caseNo}}</td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ row.location }}</td>
+                        <td>{{ row.x }}</td>
+                        <td>{{ row.y }}</td>
+                        <td>{{ row.date }}</td>
+                        <td>{{ row.caseNo }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

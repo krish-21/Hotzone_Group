@@ -380,12 +380,12 @@ def cluster(vector_4d, distance, time, minimum_cluster):
     unique_labels = set(db)
     total_clusters = len(unique_labels) if -1 not in unique_labels else len(unique_labels) -1
 
-    print("Total clusters:", total_clusters)
+    # print("Total clusters:", total_clusters)
     output["totalClustered"] = total_clusters
 
     total_noise = list(db).count(-1)
 
-    print("Total un-clustered:", total_noise)
+    # print("Total un-clustered:", total_noise)
     output["totalUnclustered"] = total_noise
 
     for k in unique_labels:
@@ -394,11 +394,11 @@ def cluster(vector_4d, distance, time, minimum_cluster):
             labels_k = db == k
             cluster_k = vector_4d[labels_k]
 
-            print("Cluster", k, " size:", len(cluster_k))
+            # print("Cluster", k, " size:", len(cluster_k))
             output[k] = []
 
             for pt in cluster_k:
-                print("(x:{}, y:{}, date:{}, caseNo:{})".format(pt[0], pt[1], convertDaysToDate(pt[2]), pt[3]))
+                # print("(x:{}, y:{}, date:{}, caseNo:{})".format(pt[0], pt[1], convertDaysToDate(pt[2]), pt[3]))
                 output[k].append({
                     "x": pt[0],
                     "y": pt[1],
@@ -406,7 +406,7 @@ def cluster(vector_4d, distance, time, minimum_cluster):
                     "caseNo": int(pt[3])
                 })
 
-            print()
+            # print()
     return output
 
 # View for clustering 
@@ -464,9 +464,9 @@ def clustering(request):
             # separate cluster data separately
             clusters.append(clustering_result[i])
             
-        print()
-        print(clusters)
-        print()
+        # print()
+        # print(clusters)
+        # print()
 
         return render(request, 'cluster.html', {'clusters': clusters, 'D': D, 'T': T, 'C': C, 'method': request.method})
 
