@@ -376,15 +376,18 @@ def cluster(vector_4d, distance, time, minimum_cluster):
 
     params = {"space_eps": distance, "time_eps": time}
     db = DBSCAN(eps=1, min_samples=minimum_cluster-1, metric=custom_metric, metric_params=params).fit_predict(vector_4d)
+    output = {}
 
     unique_labels = set(db)
     total_clusters = len(unique_labels) if -1 not in unique_labels else len(unique_labels) -1
 
     print("Total clusters:", total_clusters)
+    output["totalClustered"] = total_clusters
 
     total_noise = list(db).count(-1)
 
     print("Total un-clustered:", total_noise)
+    output["totalUnclustered"] = total_noise
 
     for k in unique_labels:
         if k != -1:
@@ -393,11 +396,19 @@ def cluster(vector_4d, distance, time, minimum_cluster):
             cluster_k = vector_4d[labels_k]
 
             print("Cluster", k, " size:", len(cluster_k))
+            output[k] = []
 
             for pt in cluster_k:
                 print("(x:{}, y:{}, date:{}, caseNo:{})".format(pt[0], pt[1], convertDaysToDate(pt[2]), pt[3]))
+                output[k].append({
+                    "x": pt[0],
+                    "y": pt[1],
+                    "date": convertDaysToDate(pt[2]),
+                    "caseNo": pt[3]
+                })
 
             print()
+    return output
 
 # View for clustering 
 def clustering(request):
