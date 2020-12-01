@@ -404,7 +404,7 @@ def cluster(vector_4d, distance, time, minimum_cluster):
                     "x": pt[0],
                     "y": pt[1],
                     "date": convertDaysToDate(pt[2]),
-                    "caseNo": pt[3]
+                    "caseNo": int(pt[3])
                 })
 
             print()
